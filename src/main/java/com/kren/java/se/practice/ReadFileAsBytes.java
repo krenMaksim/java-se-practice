@@ -3,7 +3,7 @@ package com.kren.java.se.practice;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-class ReadSomeFileAsBytes {
+class ReadFileAsBytes {
 
   public static void main(String[] args) throws IOException {
     var filePath = getFilePath("some_file.txt");
@@ -22,7 +22,7 @@ class ReadSomeFileAsBytes {
   }
 
   private static String getFilePath(String fileName) {
-    return ReadSomeFileAsBytes.class.getClassLoader()
+    return ReadFileAsBytes.class.getClassLoader()
         .getResource(fileName)
         .getFile();
   }
