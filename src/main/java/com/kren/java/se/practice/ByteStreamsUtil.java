@@ -6,9 +6,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/*
+  https://docs.oracle.com/javase/tutorial/essential/io/bytestreams.html
+*/
+
 public class ByteStreamsUtil {
 
-  private static final int EOF_BYTE = -1;
+  static final int EOF_BYTE = -1;
 
   public static void readFileAsBytes(File file) throws IOException {
     try (var input = new FileInputStream(file)) {
@@ -23,16 +27,16 @@ public class ByteStreamsUtil {
   public static void writeBytesToFile(InputStream input, File file) throws IOException {
     var output = new FileOutputStream(file);
     try (input; output) {
-      int i;
-      while ((i = input.read()) != EOF_BYTE) {
-        output.write(i);
+      int byteOfData;
+      while ((byteOfData = input.read()) != EOF_BYTE) {
+        output.write(byteOfData);
       }
     }
   }
 
-  private static String toBinary(int oneByte) {
+  private static String toBinary(int byteOfData) {
     // https://stackoverflow.com/questions/12310017/how-to-convert-a-byte-to-its-binary-string-representation
-    var b1 = (byte) oneByte;
+    var b1 = (byte) byteOfData;
     return String.format("%8s", Integer.toBinaryString(b1 & 0xFF)).replace(' ', '0');
   }
 }
