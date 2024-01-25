@@ -17,6 +17,13 @@ class ByteStreamsUtilTest {
   }
 
   @Test
+  void readFileAsBytesViaBufferedStream() {
+    var file = Paths.get("src", "test", "resources", "some_file.txt").toFile();
+
+    assertDoesNotThrow(() -> ByteStreamsUtil.readFileAsBytesViaBufferedStream(file));
+  }
+
+  @Test
   void writeBytesToFile() {
     var bytes = new ByteArrayInputStream(new byte[] {100, 103, 15});
     var file = Paths.get("target", "write_file.txt").toFile();

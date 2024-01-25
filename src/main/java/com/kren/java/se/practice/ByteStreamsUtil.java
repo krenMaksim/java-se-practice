@@ -2,6 +2,7 @@ package com.kren.java.se.practice;
 
 import lombok.SneakyThrows;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -17,7 +18,17 @@ public class ByteStreamsUtil {
 
   @SneakyThrows
   public static void readFileAsBytes(File file) {
-    try (var input = new FileInputStream(file)) {
+    readFileAsBytes(new FileInputStream(file));
+  }
+
+  @SneakyThrows
+  public static void readFileAsBytesViaBufferedStream(File file) {
+    readFileAsBytes(new BufferedInputStream(new FileInputStream(file)));
+  }
+
+  @SneakyThrows
+  private static void readFileAsBytes(InputStream input) {
+    try (input) {
       System.out.println("Available bytes: " + input.available());
       int byteOfData;
       while ((byteOfData = input.read()) != EOF_BYTE) {
