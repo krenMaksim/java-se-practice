@@ -3,7 +3,6 @@ package com.kren.java.se.practice;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
 
@@ -12,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 class CharacterStreamsUtilTest {
 
   @Test
-  void readFileAsCharacters() throws IOException {
+  void readFileAsCharacters() {
     var file = Paths.get("src", "test", "resources", "some_file.txt").toFile();
 
     assertDoesNotThrow(() -> CharacterStreamsUtil.readFileAsCharacters(file));
