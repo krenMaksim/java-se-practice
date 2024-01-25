@@ -2,16 +2,20 @@ package com.kren.java.se.practice;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.nio.file.Paths;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DataGeneratorUtilTest {
 
   @Test
-  void writeRandomBytes() {
+  void writeRandomBytes() throws IOException {
     var file = Paths.get("target", "random_bytes_data.txt").toFile();
+    file.delete();
 
-    assertDoesNotThrow(() -> DataGeneratorUtil.writeRandomBytes(file, 10));
+    DataGeneratorUtil.writeRandomBytes(file, 1);
+
+    assertEquals(1_000_000, file.length());
   }
 }
