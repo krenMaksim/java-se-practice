@@ -10,7 +10,7 @@ class DataGeneratorUtilTest {
 
   @Test
   void writeRandomBytes() {
-    var file = Paths.get("target", "random_data.txt").toFile();
+    var file = Paths.get("target", "random_bytes_data.txt").toFile();
 
     assertDoesNotThrow(() -> DataGeneratorUtil.writeRandomBytes(file, 10));
   }

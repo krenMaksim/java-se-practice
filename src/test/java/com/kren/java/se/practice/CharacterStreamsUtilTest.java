@@ -25,4 +25,13 @@ class CharacterStreamsUtilTest {
 
     assertDoesNotThrow(() -> CharacterStreamsUtil.writeCharactersToFile(characters, file));
   }
+
+  @Test
+  void appendCharactersToFile() {
+    var bytes = new ByteArrayInputStream(new byte[] {100, 103, 15});
+    var characters = new InputStreamReader(bytes);
+    var file = Paths.get("target", "write_file.txt").toFile();
+
+    assertDoesNotThrow(() -> CharacterStreamsUtil.appendCharactersToFile(characters, file));
+  }
 }

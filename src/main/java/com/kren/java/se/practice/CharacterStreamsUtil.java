@@ -25,9 +25,17 @@ public class CharacterStreamsUtil {
     }
   }
 
-  @SneakyThrows
   public static void writeCharactersToFile(Reader reader, File file) {
-    var writer = new FileWriter(file);
+    writeCharactersToFile(reader, file, false);
+  }
+
+  public static void appendCharactersToFile(Reader reader, File file) {
+    writeCharactersToFile(reader, file, true);
+  }
+
+  @SneakyThrows
+  private static void writeCharactersToFile(Reader reader, File file, boolean append) {
+    var writer = new FileWriter(file, append);
     try (reader; writer) {
       int i;
       while ((i = reader.read()) != EOF_CHARACTER) {
