@@ -1,41 +1,72 @@
 package com.kren.java.se.practice;
 
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 class ByteStreamsUtilTest {
 
-  @Test
-  void readFileAsBytes() {
-    var file = Paths.get("src", "test", "resources", "some_file.txt").toFile();
+  @Nested
+  @TestInstance(PER_CLASS)
+  class FileReader {
 
-    assertDoesNotThrow(() -> ByteStreamsUtil.readFileAsBytes(file));
+    private File file;
+
+    @BeforeAll
+    void setUp() {
+      file = Paths.get("src", "test", "resources", "some_file.txt").toFile();
+    }
+
+    @Test
+    void readFileAsBytes() {
+      assertDoesNotThrow(() -> ByteStreamsUtil.readFileAsBytes(file));
+    }
+
+    @Test
+    void readFileAsBytesViaBufferedStream() {
+      assertDoesNotThrow(() -> ByteStreamsUtil.readFileAsBytesViaBufferedStream(file));
+    }
   }
 
-  @Test
-  void readFileAsBytesViaBufferedStream() {
-    var file = Paths.get("src", "test", "resources", "some_file.txt").toFile();
+  @Nested
+  class FileWriter {
 
-    assertDoesNotThrow(() -> ByteStreamsUtil.readFileAsBytesViaBufferedStream(file));
-  }
+    private ByteArrayInputStream bytes;
+    private File file;
 
-  @Test
-  void writeBytesToFile() {
-    var bytes = new ByteArrayInputStream(new byte[] {100, 103, 15});
-    var file = Paths.get("target", "write_file.txt").toFile();
+    @BeforeEach
+    void setUp() {
+      bytes = new ByteArrayInputStream(new byte[] {100, 103, 15});
+      file = Paths.get("target", "write_file.txt").toFile();
+    }
 
-    assertDoesNotThrow(() -> ByteStreamsUtil.writeBytesToFile(bytes, file));
-  }
+    @Test
+    void writeBytesToFile() {
+      assertDoesNotThrow(() -> ByteStreamsUtil.writeBytesToFile(bytes, file));
+    }
 
-  @Test
-  void appendBytesToFile() {
-    var bytes = new ByteArrayInputStream(new byte[] {100, 103, 15});
-    var file = Paths.get("target", "write_file.txt").toFile();
+    @Test
+    void writeBytesToFileViaBufferedStream() {
+      assertDoesNotThrow(() -> ByteStreamsUtil.writeBytesToFileViaBufferedStream(bytes, file));
+    }
 
-    assertDoesNotThrow(() -> ByteStreamsUtil.appendBytesToFile(bytes, file));
+    @Test
+    void appendBytesToFile() {
+      assertDoesNotThrow(() -> ByteStreamsUtil.appendBytesToFile(bytes, file));
+    }
+
+    @Test
+    void appendBytesToFileViaBufferedStream() {
+      assertDoesNotThrow(() -> ByteStreamsUtil.appendBytesToFileViaBufferedStream(bytes, file));
+    }
   }
 }

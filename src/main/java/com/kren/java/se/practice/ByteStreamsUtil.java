@@ -3,10 +3,12 @@ package com.kren.java.se.practice;
 import lombok.SneakyThrows;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /*
   https://docs.oracle.com/javase/tutorial/essential/io/bytestreams.html
@@ -37,17 +39,28 @@ public class ByteStreamsUtil {
     }
   }
 
+  @SneakyThrows
   public static void writeBytesToFile(InputStream input, File file) {
-    writeBytesToFile(input, file, false);
-  }
-
-  public static void appendBytesToFile(InputStream input, File file) {
-    writeBytesToFile(input, file, true);
+    writeBytesToFile(input, new FileOutputStream(file, false));
   }
 
   @SneakyThrows
-  private static void writeBytesToFile(InputStream input, File file, boolean append) {
-    var output = new FileOutputStream(file, append);
+  public static void writeBytesToFileViaBufferedStream(InputStream input, File file) {
+    writeBytesToFile(input, new BufferedOutputStream(new FileOutputStream(file, false)));
+  }
+
+  @SneakyThrows
+  public static void appendBytesToFile(InputStream input, File file) {
+    writeBytesToFile(input, new FileOutputStream(file, true));
+  }
+
+  @SneakyThrows
+  public static void appendBytesToFileViaBufferedStream(InputStream input, File file) {
+    writeBytesToFile(input, new BufferedOutputStream(new FileOutputStream(file, true)));
+  }
+
+  @SneakyThrows
+  private static void writeBytesToFile(InputStream input, OutputStream output) {
     try (input; output) {
       int byteOfData;
       while ((byteOfData = input.read()) != EOF_BYTE) {
