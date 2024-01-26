@@ -18,6 +18,13 @@ class CharacterStreamsUtilTest {
   }
 
   @Test
+  void readFileAsCharactersViaBufferedStream() {
+    var file = Paths.get("src", "test", "resources", "some_file.txt").toFile();
+
+    assertDoesNotThrow(() -> CharacterStreamsUtil.readFileAsCharactersViaBufferedStream(file));
+  }
+
+  @Test
   void writeCharactersToFile() {
     var bytes = new ByteArrayInputStream(new byte[] {100, 103, 15});
     var characters = new InputStreamReader(bytes);
