@@ -1,7 +1,11 @@
 package com.kren.java.se.practice;
 
+import lombok.SneakyThrows;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -13,7 +17,12 @@ public class DataGeneratorUtil {
     var data = generateRandomBytes(ONE_MB);
     IntStream.rangeClosed(1, sizeMB)
         .mapToObj(i -> new ByteArrayInputStream(data))
-        .forEach(inputStream -> ByteStreamsUtil.appendBytesToFile(inputStream, file));
+        .forEach(inputStream -> appendBytesToFile(inputStream, file));
+  }
+
+  @SneakyThrows
+  private static void appendBytesToFile(InputStream input, File file) {
+    ByteStreamsUtil.writeInputToOutput(input, new FileOutputStream(file, true));
   }
 
   private static byte[] generateRandomBytes(int length) {

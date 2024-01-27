@@ -1,15 +1,22 @@
 package com.kren.java.se.practice;
 
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.nio.file.Paths;
 
+import static com.kren.java.se.practice.ByteStreamsUtil.readInputStream;
+import static com.kren.java.se.practice.ByteStreamsUtil.writeInputToOutput;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
@@ -27,13 +34,19 @@ class ByteStreamsUtilTest {
     }
 
     @Test
+    @SneakyThrows
     void readFileAsBytes() {
-      assertDoesNotThrow(() -> ByteStreamsUtil.readFileAsBytes(file));
+      var input = new FileInputStream(file);
+
+      assertDoesNotThrow(() -> readInputStream(input));
     }
 
     @Test
+    @SneakyThrows
     void readFileAsBytesViaBufferedStream() {
-      assertDoesNotThrow(() -> ByteStreamsUtil.readFileAsBytesViaBufferedStream(file));
+      var input = new BufferedInputStream(new FileInputStream(file));
+
+      assertDoesNotThrow(() -> readInputStream(input));
     }
   }
 
@@ -50,23 +63,35 @@ class ByteStreamsUtilTest {
     }
 
     @Test
+    @SneakyThrows
     void writeBytesToFile() {
-      assertDoesNotThrow(() -> ByteStreamsUtil.writeBytesToFile(bytes, file));
+      var output = new FileOutputStream(file);
+
+      assertDoesNotThrow(() -> writeInputToOutput(bytes, output));
     }
 
     @Test
+    @SneakyThrows
     void writeBytesToFileViaBufferedStream() {
-      assertDoesNotThrow(() -> ByteStreamsUtil.writeBytesToFileViaBufferedStream(bytes, file));
+      var output = new BufferedOutputStream(new FileOutputStream(file));
+
+      assertDoesNotThrow(() -> writeInputToOutput(bytes, output));
     }
 
     @Test
+    @SneakyThrows
     void appendBytesToFile() {
-      assertDoesNotThrow(() -> ByteStreamsUtil.appendBytesToFile(bytes, file));
+      var output = new FileOutputStream(file, true);
+
+      assertDoesNotThrow(() -> writeInputToOutput(bytes, output));
     }
 
     @Test
+    @SneakyThrows
     void appendBytesToFileViaBufferedStream() {
-      assertDoesNotThrow(() -> ByteStreamsUtil.appendBytesToFileViaBufferedStream(bytes, file));
+      var output = new BufferedOutputStream(new FileOutputStream(file, true));
+
+      assertDoesNotThrow(() -> writeInputToOutput(bytes, output));
     }
   }
 }

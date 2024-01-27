@@ -2,11 +2,6 @@ package com.kren.java.se.practice;
 
 import lombok.SneakyThrows;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -19,17 +14,7 @@ public class ByteStreamsUtil {
   static final int EOF_BYTE = -1;
 
   @SneakyThrows
-  public static void readFileAsBytes(File file) {
-    readInputStream(new FileInputStream(file));
-  }
-
-  @SneakyThrows
-  public static void readFileAsBytesViaBufferedStream(File file) {
-    readInputStream(new BufferedInputStream(new FileInputStream(file)));
-  }
-
-  @SneakyThrows
-  private static void readInputStream(InputStream input) {
+  public static void readInputStream(InputStream input) {
     try (input) {
       System.out.println("Available bytes: " + input.available());
       int byteOfData;
@@ -40,27 +25,7 @@ public class ByteStreamsUtil {
   }
 
   @SneakyThrows
-  public static void writeBytesToFile(InputStream input, File file) {
-    writeInputStreamToOutputStream(input, new FileOutputStream(file, false));
-  }
-
-  @SneakyThrows
-  public static void writeBytesToFileViaBufferedStream(InputStream input, File file) {
-    writeInputStreamToOutputStream(input, new BufferedOutputStream(new FileOutputStream(file, false)));
-  }
-
-  @SneakyThrows
-  public static void appendBytesToFile(InputStream input, File file) {
-    writeInputStreamToOutputStream(input, new FileOutputStream(file, true));
-  }
-
-  @SneakyThrows
-  public static void appendBytesToFileViaBufferedStream(InputStream input, File file) {
-    writeInputStreamToOutputStream(input, new BufferedOutputStream(new FileOutputStream(file, true)));
-  }
-
-  @SneakyThrows
-  private static void writeInputStreamToOutputStream(InputStream input, OutputStream output) {
+  public static void writeInputToOutput(InputStream input, OutputStream output) {
     try (input; output) {
       int byteOfData;
       while ((byteOfData = input.read()) != EOF_BYTE) {
