@@ -20,16 +20,16 @@ public class ByteStreamsUtil {
 
   @SneakyThrows
   public static void readFileAsBytes(File file) {
-    readFileAsBytes(new FileInputStream(file));
+    readInputStream(new FileInputStream(file));
   }
 
   @SneakyThrows
   public static void readFileAsBytesViaBufferedStream(File file) {
-    readFileAsBytes(new BufferedInputStream(new FileInputStream(file)));
+    readInputStream(new BufferedInputStream(new FileInputStream(file)));
   }
 
   @SneakyThrows
-  private static void readFileAsBytes(InputStream input) {
+  private static void readInputStream(InputStream input) {
     try (input) {
       System.out.println("Available bytes: " + input.available());
       int byteOfData;
@@ -41,26 +41,26 @@ public class ByteStreamsUtil {
 
   @SneakyThrows
   public static void writeBytesToFile(InputStream input, File file) {
-    writeBytesToFile(input, new FileOutputStream(file, false));
+    writeInputStreamToOutputStream(input, new FileOutputStream(file, false));
   }
 
   @SneakyThrows
   public static void writeBytesToFileViaBufferedStream(InputStream input, File file) {
-    writeBytesToFile(input, new BufferedOutputStream(new FileOutputStream(file, false)));
+    writeInputStreamToOutputStream(input, new BufferedOutputStream(new FileOutputStream(file, false)));
   }
 
   @SneakyThrows
   public static void appendBytesToFile(InputStream input, File file) {
-    writeBytesToFile(input, new FileOutputStream(file, true));
+    writeInputStreamToOutputStream(input, new FileOutputStream(file, true));
   }
 
   @SneakyThrows
   public static void appendBytesToFileViaBufferedStream(InputStream input, File file) {
-    writeBytesToFile(input, new BufferedOutputStream(new FileOutputStream(file, true)));
+    writeInputStreamToOutputStream(input, new BufferedOutputStream(new FileOutputStream(file, true)));
   }
 
   @SneakyThrows
-  private static void writeBytesToFile(InputStream input, OutputStream output) {
+  private static void writeInputStreamToOutputStream(InputStream input, OutputStream output) {
     try (input; output) {
       int byteOfData;
       while ((byteOfData = input.read()) != EOF_BYTE) {
