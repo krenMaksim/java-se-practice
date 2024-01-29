@@ -2,6 +2,7 @@ package com.kren.java.se.practice;
 
 import lombok.SneakyThrows;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -22,7 +23,7 @@ public class DataGeneratorUtil {
 
   @SneakyThrows
   private static void appendBytesToFile(InputStream input, File file) {
-    ByteStreamsUtil.writeInputToOutput(input, new FileOutputStream(file, true));
+    ByteStreamsUtil.writeInputToOutput(input, new BufferedOutputStream((new FileOutputStream(file, true))));
   }
 
   private static byte[] generateRandomBytes(int length) {
