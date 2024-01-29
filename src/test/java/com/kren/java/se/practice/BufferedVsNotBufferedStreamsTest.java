@@ -13,6 +13,9 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.nio.file.Paths;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.IntConsumer;
 
 import static com.kren.java.se.practice.ByteStreamsUtil.readInputStream;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -35,18 +38,26 @@ class BufferedVsNotBufferedStreamsTest {
     @Test
     @SneakyThrows
     void readFile() {
+      List<Integer> data = new LinkedList<>();
+      IntConsumer byteProcessor = byteOfData -> data.add(byteOfData);
+
       var input = new FileInputStream(file);
 
-      assertDoesNotThrow(() -> readInputStream(input));
+      assertDoesNotThrow(() -> readInputStream(input, byteProcessor));
+      System.out.println("Read bytes:" + data.size());
     }
 
     @SneakyThrows
     @ParameterizedTest
     @ValueSource(ints = {1024, 4096, 8192, 16384, 32768, 65536})
     void readFileBuffered(int dufferSizeBytes) {
+      List<Integer> data = new LinkedList<>();
+      IntConsumer byteProcessor = byteOfData -> data.add(byteOfData);
+
       var input = new BufferedInputStream(new FileInputStream(file), dufferSizeBytes);
 
-      assertDoesNotThrow(() -> readInputStream(input));
+      assertDoesNotThrow(() -> readInputStream(input, byteProcessor));
+      System.out.println("Read bytes:" + data.size());
     }
 
     @AfterAll

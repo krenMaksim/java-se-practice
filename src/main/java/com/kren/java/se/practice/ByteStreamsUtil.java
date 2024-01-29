@@ -4,6 +4,7 @@ import lombok.SneakyThrows;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.function.IntConsumer;
 
 /*
   https://docs.oracle.com/javase/tutorial/essential/io/bytestreams.html
@@ -13,13 +14,16 @@ public class ByteStreamsUtil {
 
   static final int EOF_BYTE = -1;
 
-  @SneakyThrows
   public static void readInputStream(InputStream input) {
+    readInputStream(input, byteOfData -> System.out.print((char) byteOfData));
+  }
+
+  @SneakyThrows
+  public static void readInputStream(InputStream input, IntConsumer byteProcessor) {
     try (input) {
-      System.out.println("Available bytes: " + input.available());
       int byteOfData;
       while ((byteOfData = input.read()) != EOF_BYTE) {
-        System.out.print((char) byteOfData);
+        byteProcessor.accept(byteOfData);
       }
     }
   }
