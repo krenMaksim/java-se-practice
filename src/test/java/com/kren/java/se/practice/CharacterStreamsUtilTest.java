@@ -1,44 +1,98 @@
 package com.kren.java.se.practice;
 
+import lombok.SneakyThrows;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
 
+import static com.kren.java.se.practice.CharacterStreamsUtil.readCharacters;
+import static com.kren.java.se.practice.CharacterStreamsUtil.writeCharacters;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
 class CharacterStreamsUtilTest {
 
-  @Test
-  void readFileAsCharacters() {
-    var file = Paths.get("src", "test", "resources", "some_file.txt").toFile();
+  @Nested
+  @TestInstance(PER_CLASS)
+  class CharactersReader {
 
-    assertDoesNotThrow(() -> CharacterStreamsUtil.readFileAsCharacters(file));
+    private File file;
+
+    @BeforeAll
+    void setUp() {
+      file = Paths.get("src", "test", "resources", "some_file.txt").toFile();
+    }
+
+    @Test
+    @SneakyThrows
+    void readFileAsCharacters() {
+      var reader = new FileReader(file);
+
+      assertDoesNotThrow(() -> readCharacters(reader));
+    }
+
+    @Test
+    @SneakyThrows
+    void readFileAsCharactersViaBufferedReader() {
+      var reader = new BufferedReader(new FileReader(file));
+
+      assertDoesNotThrow(() -> readCharacters(reader));
+    }
   }
 
-  @Test
-  void readFileAsCharactersViaBufferedStream() {
-    var file = Paths.get("src", "test", "resources", "some_file.txt").toFile();
+  @Nested
+  class CharactersWriter {
 
-    assertDoesNotThrow(() -> CharacterStreamsUtil.readFileAsCharactersViaBufferedStream(file));
-  }
+    private File file;
+    private InputStreamReader characters;
 
-  @Test
-  void writeCharactersToFile() {
-    var bytes = new ByteArrayInputStream(new byte[] {100, 103, 15});
-    var characters = new InputStreamReader(bytes);
-    var file = Paths.get("target", "write_file.txt").toFile();
+    @BeforeEach
+    void setUp() {
+      file = Paths.get("target", "write_file.txt").toFile();
+      characters = new InputStreamReader(new ByteArrayInputStream(new byte[] {100, 103, 15}));
+    }
 
-    assertDoesNotThrow(() -> CharacterStreamsUtil.writeCharactersToFile(characters, file));
-  }
+    @Test
+    @SneakyThrows
+    void writeCharactersToFile() {
+      var writer = new FileWriter(file);
 
-  @Test
-  void appendCharactersToFile() {
-    var bytes = new ByteArrayInputStream(new byte[] {100, 103, 15});
-    var characters = new InputStreamReader(bytes);
-    var file = Paths.get("target", "write_file.txt").toFile();
+      assertDoesNotThrow(() -> writeCharacters(characters, writer));
+    }
 
-    assertDoesNotThrow(() -> CharacterStreamsUtil.appendCharactersToFile(characters, file));
+    @Test
+    @SneakyThrows
+    void writeCharactersToFileViaBufferedStream() {
+      var writer = new BufferedWriter(new FileWriter(file));
+
+      assertDoesNotThrow(() -> writeCharacters(characters, writer));
+    }
+
+    @Test
+    @SneakyThrows
+    void appendCharactersToFile() {
+      var writer = new FileWriter(file, true);
+
+      assertDoesNotThrow(() -> writeCharacters(characters, writer));
+    }
+
+    @Test
+    @SneakyThrows
+    void appendCharactersToFileViaBufferedStream() {
+      var writer = new BufferedWriter(new FileWriter(file, true));
+
+      assertDoesNotThrow(() -> writeCharacters(characters, writer));
+    }
   }
 }
