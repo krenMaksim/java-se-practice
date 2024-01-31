@@ -60,11 +60,24 @@ class FilesApiTest {
 
   @Test
   @SneakyThrows
-  void openStream() {
+  void readFileLineByLineViaStream() {
     var someFile = Paths.get("src", "test", "resources", "some_file.txt");
 
     Files.lines(someFile)
         .forEach(System.out::println);
+  }
+
+  @Test
+  @SneakyThrows
+  void readFileLineByLineViaBufferedReader() {
+    var someFile = Paths.get("src", "test", "resources", "some_file.txt");
+    
+    try (var reader = Files.newBufferedReader(someFile)) {
+      String line;
+      while ((line = reader.readLine()) != null) {
+        System.out.println(line);
+      }
+    }
   }
 
   @Test
