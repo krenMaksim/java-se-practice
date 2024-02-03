@@ -12,7 +12,7 @@ import java.util.function.IntConsumer;
 
 public class ByteStreamsUtil {
 
-  static final int EOF_BYTE = -1;
+  private static final int EOF_BYTE = -1;
 
   public static void readInputStream(InputStream input) {
     readInputStream(input, byteOfData -> System.out.print((char) byteOfData));
