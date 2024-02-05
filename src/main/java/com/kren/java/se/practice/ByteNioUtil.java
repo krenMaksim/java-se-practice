@@ -8,6 +8,11 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.function.Consumer;
 
+/*
+  https://docs.oracle.com/javase/tutorial/essential/io/file.html
+  https://jenkov.com/tutorials/java-nio/channels.html
+*/
+
 public class ByteNioUtil {
 
   private static final int END_OF_STREAM = -1;
