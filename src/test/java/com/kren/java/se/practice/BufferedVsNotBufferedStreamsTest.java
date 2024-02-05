@@ -16,18 +16,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
+import static com.kren.java.se.practice.ByteNioUtil.readBytes;
 import static com.kren.java.se.practice.ByteStreamsUtil.readInputStream;
 import static com.kren.java.se.practice.ByteStreamsUtil.writeInputToOutput;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BufferedVsNotBufferedStreamsTest {
 
-  private static final int FILE_SIZE_MB = 10;
+  private static final int FILE_SIZE_MB = 100;
   private static final int FILE_SIZE_BYTE = FILE_SIZE_MB * 1_000_000;
 
   private static File file;
@@ -72,6 +75,16 @@ class BufferedVsNotBufferedStreamsTest {
       var input = new BufferedInputStream(new FileInputStream(file), dufferSizeBytes);
 
       readInputStream(input, byteProcessor);
+
+      assertEquals(FILE_SIZE_BYTE, data.size());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {32, 64, 128, 256, 512, 1024, 2048})
+    void readFileNio(int bufferCapacityBytes) {
+      Consumer<ByteBuffer> bufferProcessor = byteBuffer -> data.add((int) byteBuffer.get());
+
+      readBytes(file.toPath(), bufferCapacityBytes, bufferProcessor);
 
       assertEquals(FILE_SIZE_BYTE, data.size());
     }

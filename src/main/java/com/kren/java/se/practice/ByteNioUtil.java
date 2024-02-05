@@ -2,9 +2,10 @@ package com.kren.java.se.practice;
 
 import lombok.SneakyThrows;
 
-import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.function.Consumer;
 
 public class ByteNioUtil {
@@ -17,18 +18,15 @@ public class ByteNioUtil {
 
   @SneakyThrows
   public static void readBytes(Path file, int bufferCapacityBytes, Consumer<ByteBuffer> bufferProcessor) {
-    var randomAccessFile = new RandomAccessFile(file.toFile(), "r");
-    var fileChannel = randomAccessFile.getChannel();
-
-    try (randomAccessFile; fileChannel) {
-      ByteBuffer buf = ByteBuffer.allocate(bufferCapacityBytes);
+    try (var byteChannel = Files.newByteChannel(file, StandardOpenOption.READ)) {
+      var byteBuffer = ByteBuffer.allocate(bufferCapacityBytes);
       int bytesRead;
-      while ((bytesRead = fileChannel.read(buf)) != END_OF_STREAM) {
-        buf.flip();
-        while (buf.hasRemaining()) {
-          bufferProcessor.accept(buf);
+      while ((bytesRead = byteChannel.read(byteBuffer)) != END_OF_STREAM) {
+        byteBuffer.flip();
+        while (byteBuffer.hasRemaining()) {
+          bufferProcessor.accept(byteBuffer);
         }
-        buf.clear();
+        byteBuffer.clear();
       }
     }
   }
