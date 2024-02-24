@@ -2,6 +2,8 @@ package com.kren.java.se.practice;
 
 import lombok.SneakyThrows;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -11,6 +13,7 @@ import java.util.function.Consumer;
 /*
   https://docs.oracle.com/javase/tutorial/essential/io/file.html
   https://jenkov.com/tutorials/java-nio/channels.html
+  https://www.baeldung.com/java-filechannel
 */
 
 public class ByteNioUtil {
@@ -33,6 +36,29 @@ public class ByteNioUtil {
         }
         byteBuffer.clear();
       }
+    }
+  }
+
+  @SneakyThrows
+  public static void writeBytes(Path file, byte[] data) {
+    try (var byteChannel = Files.newByteChannel(file, StandardOpenOption.WRITE)) {
+      var byteBuffer = ByteBuffer.wrap(data);
+      byteChannel.write(byteBuffer);
+    }
+  }
+
+  @SneakyThrows
+  public static void writeBytes(Path file, InputStream data) {
+    try (var byteChannel = Files.newByteChannel(file, StandardOpenOption.APPEND)) {
+
+    }
+  }
+
+  @SneakyThrows
+  public static void writeBytes(Path file, FileInputStream data) {
+    data.getChannel();
+    try (var byteChannel = Files.newByteChannel(file, StandardOpenOption.APPEND)) {
+      // https://jenkov.com/tutorials/java-nio/channel-to-channel-transfers.html
     }
   }
 }
