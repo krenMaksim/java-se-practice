@@ -7,14 +7,11 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 
-import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.kren.java.se.practice.ByteStreamsUtil.writeInputToOutput;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
@@ -52,25 +49,13 @@ class ByteNioUtilTest {
     @Test
     @SneakyThrows
     void writeBytesToFile() {
-      var output = new FileOutputStream(file);
-
-      assertDoesNotThrow(() -> ByteNioUtil.writeBytes(file.toPath(), new byte[] {100, 103, 15}));
-    }
-
-    @Test
-    @SneakyThrows
-    void writeBytesToFileViaBufferedStream() {
-      var output = new BufferedOutputStream(new FileOutputStream(file));
-
-      assertDoesNotThrow(() -> writeInputToOutput(bytes, output));
+      assertDoesNotThrow(() -> ByteNioUtil.writeBytesToFile(file.toPath(), new byte[] {100, 103, 15}));
     }
 
     @Test
     @SneakyThrows
     void appendBytesToFile() {
-      var output = new FileOutputStream(file, true);
-
-      assertDoesNotThrow(() -> writeInputToOutput(bytes, output));
+      assertDoesNotThrow(() -> ByteNioUtil.appendBytesToFile(file.toPath(), new byte[] {100, 103, 15}));
     }
   }
 }

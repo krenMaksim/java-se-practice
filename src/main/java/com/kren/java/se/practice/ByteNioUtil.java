@@ -3,9 +3,10 @@ package com.kren.java.se.practice;
 import lombok.SneakyThrows;
 
 import java.io.FileInputStream;
-import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.function.Consumer;
@@ -39,26 +40,28 @@ public class ByteNioUtil {
     }
   }
 
+  public static void writeBytesToFile(Path file, byte[] data) {
+    writeBytes(file, data, StandardOpenOption.WRITE);
+  }
+
+  public static void appendBytesToFile(Path file, byte[] data) {
+    writeBytes(file, data, StandardOpenOption.APPEND);
+  }
+
   @SneakyThrows
-  public static void writeBytes(Path file, byte[] data) {
-    try (var byteChannel = Files.newByteChannel(file, StandardOpenOption.WRITE)) {
+  private static void writeBytes(Path file, byte[] data, OpenOption option) {
+    try (var byteChannel = Files.newByteChannel(file, option)) {
       var byteBuffer = ByteBuffer.wrap(data);
       byteChannel.write(byteBuffer);
     }
   }
 
   @SneakyThrows
-  public static void writeBytes(Path file, InputStream data) {
-    try (var byteChannel = Files.newByteChannel(file, StandardOpenOption.APPEND)) {
-
-    }
-  }
-
-  @SneakyThrows
   public static void writeBytes(Path file, FileInputStream data) {
-    data.getChannel();
-    try (var byteChannel = Files.newByteChannel(file, StandardOpenOption.APPEND)) {
-      // https://jenkov.com/tutorials/java-nio/channel-to-channel-transfers.html
+    var inputChannel = data.getChannel();
+    var outputChannel = FileChannel.open(file, StandardOpenOption.WRITE);
+    try (inputChannel; outputChannel) {
+      outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
     }
   }
 }
