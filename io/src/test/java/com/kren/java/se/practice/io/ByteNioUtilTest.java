@@ -1,4 +1,4 @@
-package com.kren.java.se.practice;
+package com.kren.java.se.practice.io;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;

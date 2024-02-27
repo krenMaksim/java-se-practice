@@ -1,4 +1,4 @@
-package com.kren.java.se.practice;
+package com.kren.java.se.practice.io;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
@@ -15,8 +15,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.nio.file.Paths;
 
-import static com.kren.java.se.practice.ByteStreamsUtil.readInputStream;
-import static com.kren.java.se.practice.ByteStreamsUtil.writeInputToOutput;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
@@ -38,7 +36,7 @@ class ByteStreamsUtilTest {
     void readFileAsBytes() {
       var input = new FileInputStream(file);
 
-      assertDoesNotThrow(() -> readInputStream(input));
+      assertDoesNotThrow(() -> ByteStreamsUtil.readInputStream(input));
     }
 
     @Test
@@ -46,7 +44,7 @@ class ByteStreamsUtilTest {
     void readFileAsBytesViaBufferedStream() {
       var input = new BufferedInputStream(new FileInputStream(file));
 
-      assertDoesNotThrow(() -> readInputStream(input));
+      assertDoesNotThrow(() -> ByteStreamsUtil.readInputStream(input));
     }
   }
 
@@ -67,7 +65,7 @@ class ByteStreamsUtilTest {
     void writeBytesToFile() {
       var output = new FileOutputStream(file);
 
-      assertDoesNotThrow(() -> writeInputToOutput(bytes, output));
+      assertDoesNotThrow(() -> ByteStreamsUtil.writeInputToOutput(bytes, output));
     }
 
     @Test
@@ -75,7 +73,7 @@ class ByteStreamsUtilTest {
     void writeBytesToFileViaBufferedStream() {
       var output = new BufferedOutputStream(new FileOutputStream(file));
 
-      assertDoesNotThrow(() -> writeInputToOutput(bytes, output));
+      assertDoesNotThrow(() -> ByteStreamsUtil.writeInputToOutput(bytes, output));
     }
 
     @Test
@@ -83,7 +81,7 @@ class ByteStreamsUtilTest {
     void appendBytesToFile() {
       var output = new FileOutputStream(file, true);
 
-      assertDoesNotThrow(() -> writeInputToOutput(bytes, output));
+      assertDoesNotThrow(() -> ByteStreamsUtil.writeInputToOutput(bytes, output));
     }
 
     @Test
@@ -91,7 +89,7 @@ class ByteStreamsUtilTest {
     void appendBytesToFileViaBufferedStream() {
       var output = new BufferedOutputStream(new FileOutputStream(file, true));
 
-      assertDoesNotThrow(() -> writeInputToOutput(bytes, output));
+      assertDoesNotThrow(() -> ByteStreamsUtil.writeInputToOutput(bytes, output));
     }
   }
 }

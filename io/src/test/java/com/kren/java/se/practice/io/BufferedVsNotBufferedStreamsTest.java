@@ -1,4 +1,4 @@
-package com.kren.java.se.practice;
+package com.kren.java.se.practice.io;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
@@ -23,9 +23,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 
-import static com.kren.java.se.practice.ByteNioUtil.readBytes;
-import static com.kren.java.se.practice.ByteStreamsUtil.readInputStream;
-import static com.kren.java.se.practice.ByteStreamsUtil.writeInputToOutput;
+import static com.kren.java.se.practice.io.ByteNioUtil.readBytes;
+import static com.kren.java.se.practice.io.ByteStreamsUtil.readInputStream;
+import static com.kren.java.se.practice.io.ByteStreamsUtil.writeInputToOutput;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class BufferedVsNotBufferedStreamsTest {

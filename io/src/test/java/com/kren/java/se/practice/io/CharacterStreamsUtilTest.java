@@ -1,4 +1,4 @@
-package com.kren.java.se.practice;
+package com.kren.java.se.practice.io;
 
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeAll;
@@ -16,8 +16,6 @@ import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.nio.file.Paths;
 
-import static com.kren.java.se.practice.CharacterStreamsUtil.readCharacters;
-import static com.kren.java.se.practice.CharacterStreamsUtil.writeCharacters;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 
@@ -39,7 +37,7 @@ class CharacterStreamsUtilTest {
     void readFileAsCharacters() {
       var reader = new FileReader(file);
 
-      assertDoesNotThrow(() -> readCharacters(reader));
+      assertDoesNotThrow(() -> CharacterStreamsUtil.readCharacters(reader));
     }
 
     @Test
@@ -47,7 +45,7 @@ class CharacterStreamsUtilTest {
     void readFileAsCharactersViaBufferedReader() {
       var reader = new BufferedReader(new FileReader(file));
 
-      assertDoesNotThrow(() -> readCharacters(reader));
+      assertDoesNotThrow(() -> CharacterStreamsUtil.readCharacters(reader));
     }
   }
 
@@ -68,7 +66,7 @@ class CharacterStreamsUtilTest {
     void writeCharactersToFile() {
       var writer = new FileWriter(file);
 
-      assertDoesNotThrow(() -> writeCharacters(characters, writer));
+      assertDoesNotThrow(() -> CharacterStreamsUtil.writeCharacters(characters, writer));
     }
 
     @Test
@@ -76,7 +74,7 @@ class CharacterStreamsUtilTest {
     void writeCharactersToFileViaBufferedStream() {
       var writer = new BufferedWriter(new FileWriter(file));
 
-      assertDoesNotThrow(() -> writeCharacters(characters, writer));
+      assertDoesNotThrow(() -> CharacterStreamsUtil.writeCharacters(characters, writer));
     }
 
     @Test
@@ -84,7 +82,7 @@ class CharacterStreamsUtilTest {
     void appendCharactersToFile() {
       var writer = new FileWriter(file, true);
 
-      assertDoesNotThrow(() -> writeCharacters(characters, writer));
+      assertDoesNotThrow(() -> CharacterStreamsUtil.writeCharacters(characters, writer));
     }
 
     @Test
@@ -92,7 +90,7 @@ class CharacterStreamsUtilTest {
     void appendCharactersToFileViaBufferedStream() {
       var writer = new BufferedWriter(new FileWriter(file, true));
 
-      assertDoesNotThrow(() -> writeCharacters(characters, writer));
+      assertDoesNotThrow(() -> CharacterStreamsUtil.writeCharacters(characters, writer));
     }
   }
 }
