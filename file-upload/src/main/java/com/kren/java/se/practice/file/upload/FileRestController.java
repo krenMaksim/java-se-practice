@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedInputStream;
+
 @Slf4j
 @RestController
 class FileRestController {
@@ -22,7 +24,7 @@ class FileRestController {
 
   @SneakyThrows
   private static void readInputStream(MultipartFile file) {
-    try (var input = file.getInputStream()) {
+    try (var input = new BufferedInputStream(file.getInputStream())) {
       int byteOfData;
       while ((byteOfData = input.read()) != EOF_BYTE) {
         System.out.print((char) byteOfData);
