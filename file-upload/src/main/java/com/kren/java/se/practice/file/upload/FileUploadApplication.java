@@ -6,8 +6,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class FileUploadApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(FileUploadApplication.class, args);
-	}
+  /*
+    java -XshowSettings
+    java.io.tmpdir = C:\Users\MAKSIM~1\AppData\Local\Temp\
+   */
 
+  public static void main(String[] args) {
+    SpringApplication.run(FileUploadApplication.class, args);
+  }
 }
