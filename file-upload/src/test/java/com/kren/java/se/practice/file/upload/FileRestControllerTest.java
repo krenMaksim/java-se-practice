@@ -10,12 +10,16 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import java.io.File;
 import java.nio.file.Paths;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class FileRestControllerTest {
@@ -41,8 +45,13 @@ class FileRestControllerTest {
 
     var requestEntity = new HttpEntity<MultiValueMap<String, Object>>(body, headers);
 
-    restTemplate.postForEntity("/upload-file-form", requestEntity, String.class);
-    System.out.println("do something");
+    var response = restTemplate.postForEntity("/upload-file-form", requestEntity, String.class);
+
+    response.getStatusCode();
+    response.getBody();
+
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat(response.getBody(), is("random_bytes_data.txt"));
   }
 
   @AfterAll
