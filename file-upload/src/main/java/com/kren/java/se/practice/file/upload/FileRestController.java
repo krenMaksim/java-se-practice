@@ -20,6 +20,26 @@ class FileRestController {
     return file.getOriginalFilename();
   }
 
+  // TBD
+  @PostMapping("/upload-file-form-v2")
+  public String uploadFile2(
+      @RequestParam("file") MultipartFile file,
+      @RequestParam("io_lib") String lib, // io, nio
+      @RequestParam("buffer_size") Integer bufferSize) {
+
+    // read file different methods
+    // calculate size and return it
+    // add tests showing how performance is different for different technology and buffer
+    // OPTIONAL extend existing implementation for characters
+
+    // do the same functionality for downloading files
+    // do the same functionality for Servlet API
+
+    log.info("Uploaded {}", file.getOriginalFilename());
+    readInputStream(file);
+    return file.getOriginalFilename();
+  }
+
   private static final int EOF_BYTE = -1;
 
   @SneakyThrows
