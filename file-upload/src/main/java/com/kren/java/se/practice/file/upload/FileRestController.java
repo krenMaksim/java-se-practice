@@ -13,12 +13,16 @@ import java.io.BufferedInputStream;
 @RestController
 class FileRestController {
 
+  // focus on ---------------------
+
   @PostMapping("/upload-file-form")
   public String uploadFile(@RequestParam("file") MultipartFile file) {
     log.info("Uploaded {}", file.getOriginalFilename());
     readInputStream(file);
     return file.getOriginalFilename();
   }
+
+  // focus on ----------------
 
   // TBD
   @PostMapping("/upload-file-form-v2")
