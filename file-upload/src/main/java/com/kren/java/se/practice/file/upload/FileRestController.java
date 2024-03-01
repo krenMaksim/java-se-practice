@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.function.IntConsumer;
 
 @Slf4j
 @RestController
@@ -20,6 +23,23 @@ class FileRestController {
     log.info("Uploaded {}", file.getOriginalFilename());
     readInputStream(file);
     return file.getOriginalFilename();
+  }
+
+  static class ByteCalculator {
+
+    private final List<Integer> data;
+
+    public ByteCalculator() {
+      data = new LinkedList<>();
+    }
+
+    public IntConsumer newIoCalculator() {
+      return byteOfData -> data.add(byteOfData);
+    }
+
+    public int getBytesNumber() {
+      return data.size();
+    }
   }
 
   // focus on ----------------
