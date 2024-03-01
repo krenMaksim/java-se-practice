@@ -17,7 +17,7 @@ public class FileUploadTestClient {
 
   private final TestRestTemplate restTemplate;
 
-  public ResponseEntity<String> uploadFile(File file) {
+  public ResponseEntity<Integer> uploadFile(File file) {
     var headers = new HttpHeaders();
     headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
@@ -26,6 +26,6 @@ public class FileUploadTestClient {
 
     var requestEntity = new HttpEntity<MultiValueMap<String, Object>>(body, headers);
 
-    return restTemplate.postForEntity("/upload-file-form", requestEntity, String.class);
+    return restTemplate.postForEntity("/upload-file-form", requestEntity, Integer.class);
   }
 }

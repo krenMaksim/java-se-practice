@@ -1,5 +1,6 @@
 package com.kren.java.se.practice.file.upload;
 
+import com.kren.java.se.practice.io.ByteStreamsUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -10,7 +11,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedInputStream;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.IntConsumer;
 
 @Slf4j
 @RestController
@@ -18,26 +18,27 @@ class FileRestController {
 
   // focus on ---------------------
 
+  @SneakyThrows
   @PostMapping("/upload-file-form")
-  public String uploadFile(@RequestParam("file") MultipartFile file) {
-    log.info("Uploaded {}", file.getOriginalFilename());
-    readInputStream(file);
-    return file.getOriginalFilename();
+  public Integer uploadFile(@RequestParam("file") MultipartFile file) {
+    var processor = new ByteProcessor();
+    ByteStreamsUtil.readInputStream(file.getInputStream(), processor::handle);
+    return processor.getReceivedBytes();
   }
 
-  static class ByteCalculator {
+  static class ByteProcessor {
 
     private final List<Integer> data;
 
-    public ByteCalculator() {
+    public ByteProcessor() {
       data = new LinkedList<>();
     }
 
-    public IntConsumer newIoCalculator() {
-      return byteOfData -> data.add(byteOfData);
+    public void handle(int byteOfData) {
+      data.add(byteOfData);
     }
 
-    public int getBytesNumber() {
+    public int getReceivedBytes() {
       return data.size();
     }
   }

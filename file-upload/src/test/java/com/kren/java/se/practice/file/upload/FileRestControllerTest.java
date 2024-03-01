@@ -1,7 +1,7 @@
 package com.kren.java.se.practice.file.upload;
 
 import com.kren.java.se.practice.file.upload.test.util.FileUploadTestClient;
-import lombok.SneakyThrows;
+import com.kren.java.se.practice.io.DataGeneratorUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,7 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpStatus;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -17,20 +16,21 @@ import java.nio.file.Paths;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.http.HttpStatus.OK;
 
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 class FileRestControllerTest {
 
+  private static final int FILE_SIZE_MB = 1;
+  private static final int FILE_SIZE_BYTE = FILE_SIZE_MB * 1_000_000;
   private static final String FILE_NAME = "random_bytes_data.txt";
 
   private static File file;
 
   @BeforeAll
-  @SneakyThrows
   static void createTestFile() {
     file = Paths.get("target", FILE_NAME).toFile();
-    file.createNewFile(); // temp solution to run tests faster during development
-    // DataGeneratorUtil.writeRandomBytes(file, 1);
+    DataGeneratorUtil.writeRandomBytes(file, FILE_SIZE_MB);
   }
 
   private FileUploadTestClient client;
@@ -44,8 +44,8 @@ class FileRestControllerTest {
   void uploadFile() {
     var response = client.uploadFile(file);
 
-    assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat(response.getBody(), is(FILE_NAME));
+    assertThat(response.getStatusCode(), is(OK));
+    assertThat(response.getBody(), is(FILE_SIZE_BYTE));
   }
 
   @AfterAll
