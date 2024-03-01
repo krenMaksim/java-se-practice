@@ -6,6 +6,9 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -43,6 +46,16 @@ class FileRestControllerTest {
   @Test
   void uploadFile() {
     var response = client.uploadFile(file);
+
+    assertThat(response.getStatusCode(), is(OK));
+    assertThat(response.getBody(), is(FILE_SIZE_BYTE));
+  }
+
+  @ParameterizedTest
+  @NullSource
+  @ValueSource(ints = {1024, 4096, 8192, 16384, 32768, 65536})
+  void uploadFileBuffered(Integer bufferSizeBytes) {
+    var response = client.uploadFile(file, bufferSizeBytes);
 
     assertThat(response.getStatusCode(), is(OK));
     assertThat(response.getBody(), is(FILE_SIZE_BYTE));

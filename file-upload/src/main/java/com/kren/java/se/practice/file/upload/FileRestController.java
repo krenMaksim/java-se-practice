@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedInputStream;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @RestController
@@ -20,9 +21,14 @@ class FileRestController {
 
   @SneakyThrows
   @PostMapping("/upload-file-form")
-  public Integer uploadFile(@RequestParam("file") MultipartFile file) {
+  public Integer uploadFile(@RequestParam("file") MultipartFile file,
+      @RequestParam(value = "buffer_size", required = false) Integer bufferSizeBytes) {
     var processor = new ByteProcessor();
-    ByteStreamsUtil.readInputStream(file.getInputStream(), processor::handle);
+    if (Objects.isNull(bufferSizeBytes)) {
+      ByteStreamsUtil.readInputStream(file.getInputStream(), processor::handle);
+    } else {
+      ByteStreamsUtil.readInputStream(new BufferedInputStream(file.getInputStream(), bufferSizeBytes), processor::handle);
+    }
     return processor.getReceivedBytes();
   }
 

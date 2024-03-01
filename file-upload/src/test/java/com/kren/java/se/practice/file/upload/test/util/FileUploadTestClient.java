@@ -18,11 +18,16 @@ public class FileUploadTestClient {
   private final TestRestTemplate restTemplate;
 
   public ResponseEntity<Integer> uploadFile(File file) {
+    return uploadFile(file, null);
+  }
+
+  public ResponseEntity<Integer> uploadFile(File file, Integer bufferSizeBytes) {
     var headers = new HttpHeaders();
     headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
     var body = new LinkedMultiValueMap<String, Object>();
     body.add("file", new FileSystemResource(file));
+    body.add("buffer_size", bufferSizeBytes);
 
     var requestEntity = new HttpEntity<MultiValueMap<String, Object>>(body, headers);
 
