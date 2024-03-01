@@ -1,18 +1,23 @@
 package com.kren.java.se.practice.file.upload;
 
+import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
 
 class ByteProcessor {
 
-  private final List<Integer> data;
+  private final List<Number> data;
 
   public ByteProcessor() {
     data = new LinkedList<>();
   }
 
-  public void handle(int byteOfData) {
+  public void handleByte(int byteOfData) {
     data.add(byteOfData);
+  }
+
+  public void handleBuffer(ByteBuffer buffer) {
+    data.add(buffer.get());
   }
 
   public int getReceivedBytes() {

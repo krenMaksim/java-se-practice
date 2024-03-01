@@ -43,7 +43,8 @@ class FileRestControllerTest {
   }
 
   @ParameterizedTest
-  @NullSource
+  //  @NullSource
+  @ValueSource(ints = {48, 1024})
   void uploadFileNio(Integer bufferSizeBytes) {
     var response = client.uploadFileNio(file, bufferSizeBytes);
 

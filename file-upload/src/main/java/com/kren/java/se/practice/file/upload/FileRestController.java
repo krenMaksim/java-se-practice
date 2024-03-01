@@ -1,5 +1,6 @@
 package com.kren.java.se.practice.file.upload;
 
+import com.kren.java.se.practice.io.ByteNioUtil;
 import com.kren.java.se.practice.io.ByteStreamsUtil;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
+import java.nio.channels.Channels;
 import java.util.Objects;
 
 @Slf4j
@@ -28,17 +30,22 @@ class FileRestController {
   @SneakyThrows
   private void readFile(MultipartFile file, ByteProcessor processor, Integer bufferSizeBytes) {
     if (Objects.isNull(bufferSizeBytes)) {
-      ByteStreamsUtil.readInputStream(file.getInputStream(), processor::handle);
+      ByteStreamsUtil.readInputStream(file.getInputStream(), processor::handleByte);
     } else {
-      ByteStreamsUtil.readInputStream(new BufferedInputStream(file.getInputStream(), bufferSizeBytes), processor::handle);
+      ByteStreamsUtil.readInputStream(new BufferedInputStream(file.getInputStream(), bufferSizeBytes), processor::handleByte);
     }
   }
 
+  @SneakyThrows
   @PostMapping("/upload-file-nio-form")
   public Integer uploadFileNio(@RequestParam("file") MultipartFile file,
       @RequestParam(value = "buffer_size", required = false) Integer bufferSizeBytes) {
     var processor = new ByteProcessor();
-    readFile(file, processor, bufferSizeBytes);
+    if (Objects.isNull(bufferSizeBytes)) {
+      //TBD
+    } else {
+      ByteNioUtil.readBytes(Channels.newChannel(file.getInputStream()), bufferSizeBytes, processor::handleBuffer);
+    }
     return processor.getReceivedBytes();
   }
 

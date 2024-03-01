@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import java.io.FileInputStream;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
@@ -27,7 +28,13 @@ public class ByteNioUtil {
 
   @SneakyThrows
   public static void readBytes(Path file, int bufferCapacityBytes, Consumer<ByteBuffer> bufferProcessor) {
-    try (var byteChannel = Files.newByteChannel(file, StandardOpenOption.READ)) {
+    readBytes(Files.newByteChannel(file, StandardOpenOption.READ), bufferCapacityBytes, bufferProcessor);
+  }
+
+  @SneakyThrows
+  public static void readBytes(ReadableByteChannel byteChannel, int bufferCapacityBytes,
+      Consumer<ByteBuffer> bufferProcessor) {
+    try (byteChannel) {
       var byteBuffer = ByteBuffer.allocate(bufferCapacityBytes);
       int bytesRead;
       while ((bytesRead = byteChannel.read(byteBuffer)) != END_OF_STREAM) {
