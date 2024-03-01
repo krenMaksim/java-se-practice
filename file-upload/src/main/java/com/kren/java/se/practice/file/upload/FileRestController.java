@@ -34,6 +34,14 @@ class FileRestController {
     }
   }
 
+  @PostMapping("/upload-file-nio-form")
+  public Integer uploadFileNio(@RequestParam("file") MultipartFile file,
+      @RequestParam(value = "buffer_size", required = false) Integer bufferSizeBytes) {
+    var processor = new ByteProcessor();
+    readFile(file, processor, bufferSizeBytes);
+    return processor.getReceivedBytes();
+  }
+
   // focus on ----------------
 
   // TBD

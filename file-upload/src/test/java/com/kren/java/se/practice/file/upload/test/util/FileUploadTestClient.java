@@ -17,11 +17,15 @@ public class FileUploadTestClient {
 
   private final TestRestTemplate restTemplate;
 
-  public ResponseEntity<Integer> uploadFile(File file) {
-    return uploadFile(file, null);
+  public ResponseEntity<Integer> uploadFile(File file, Integer bufferSizeBytes) {
+    return uploadFile("/upload-file-form", file, bufferSizeBytes);
   }
 
-  public ResponseEntity<Integer> uploadFile(File file, Integer bufferSizeBytes) {
+  public ResponseEntity<Integer> uploadFileNio(File file, Integer bufferSizeBytes) {
+    return uploadFile("/upload-file-nio-form", file, bufferSizeBytes);
+  }
+
+  private ResponseEntity<Integer> uploadFile(String path, File file, Integer bufferSizeBytes) {
     var headers = new HttpHeaders();
     headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
@@ -31,6 +35,6 @@ public class FileUploadTestClient {
 
     var requestEntity = new HttpEntity<MultiValueMap<String, Object>>(body, headers);
 
-    return restTemplate.postForEntity("/upload-file-form", requestEntity, Integer.class);
+    return restTemplate.postForEntity(path, requestEntity, Integer.class);
   }
 }
