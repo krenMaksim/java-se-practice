@@ -39,13 +39,9 @@ class FileRestController {
   @SneakyThrows
   @PostMapping("/upload-file-nio-form")
   public Integer uploadFileNio(@RequestParam("file") MultipartFile file,
-      @RequestParam(value = "buffer_size", required = false) Integer bufferSizeBytes) {
+      @RequestParam(value = "buffer_size") Integer bufferSizeBytes) {
     var processor = new ByteProcessor();
-    if (Objects.isNull(bufferSizeBytes)) {
-      //TBD
-    } else {
-      ByteNioUtil.readBytes(Channels.newChannel(file.getInputStream()), bufferSizeBytes, processor::handleBuffer);
-    }
+    ByteNioUtil.readBytes(Channels.newChannel(file.getInputStream()), bufferSizeBytes, processor::handleBuffer);
     return processor.getReceivedBytes();
   }
 
