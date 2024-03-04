@@ -6,7 +6,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -43,8 +42,11 @@ class FileRestControllerTest {
   }
 
   @ParameterizedTest
-  //  @NullSource
-  @ValueSource(ints = {1, 48, 1024})
+  @ValueSource(ints = {
+      1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096, 8192, 16384, 32768, 65536,
+      1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096, 8192, 16384, 32768, 65536,
+      1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096, 8192, 16384, 32768, 65536,
+  })
   void uploadFileNio(Integer bufferSizeBytes) {
     var response = client.uploadFileNio(file, bufferSizeBytes);
 
@@ -53,8 +55,11 @@ class FileRestControllerTest {
   }
 
   @ParameterizedTest
-  @NullSource
-  @ValueSource(ints = {1024, 4096, 8192, 16384, 32768, 65536})
+  @ValueSource(ints = {
+      0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096, 8192, 16384, 32768, 65536,
+      0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096, 8192, 16384, 32768, 65536,
+      0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096, 8192, 16384, 32768, 65536
+  })
   void uploadFileBuffered(Integer bufferSizeBytes) {
     var response = client.uploadFile(file, bufferSizeBytes);
 
