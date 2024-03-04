@@ -73,8 +73,15 @@ class FileRestControllerTest {
   @Test
   @SneakyThrows
   void downloadFile() {
+    var outFile = Paths.get("target", "1111.txt").toFile();
     var response = client.downloadFile();
-    response.getBody().getInputStream().transferTo(new FileOutputStream(Paths.get("target", "1111.txt").toFile()));
+
+    response.getBody().getInputStream().transferTo(new FileOutputStream(outFile));
+
+    assertThat(response.getStatusCode(), is(OK));
+    assertThat(outFile.length(), is(Long.valueOf(FILE_SIZE_BYTE)));
+
+    // TBD readble byte channel try from resource
   }
 
   @AfterAll
