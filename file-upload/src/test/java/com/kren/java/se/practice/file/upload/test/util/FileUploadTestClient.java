@@ -3,6 +3,7 @@ package com.kren.java.se.practice.file.upload.test.util;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -36,5 +37,10 @@ public class FileUploadTestClient {
     var requestEntity = new HttpEntity<MultiValueMap<String, Object>>(body, headers);
 
     return restTemplate.postForEntity(path, requestEntity, Integer.class);
+  }
+
+  // TBD think about for instance java HTTP client to come up with a tech agnostic solution
+  public ResponseEntity<Resource> downloadFile() {
+    return restTemplate.getForEntity("/download-file", Resource.class);
   }
 }

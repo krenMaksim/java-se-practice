@@ -6,6 +6,7 @@ import com.kren.java.se.practice.io.DataGeneratorUtil;
 import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -28,10 +29,15 @@ class FileRestController {
 
   private File file;
 
+  @Value("${spring.servlet.multipart.location}")
+  private String someFolder;
+
   @SneakyThrows
   @PostConstruct
   void init() {
-    file = Paths.get("file-upload", "target", "controller_file.txt").toFile();
+    System.out.println("11111" + someFolder);
+    file = Paths.get(someFolder, "controller_file.txt").toFile();
+    //    file = Paths.get("file-upload", "target", "controller_file.txt").toFile();
     if (!file.exists()) {
       file.createNewFile();
       DataGeneratorUtil.writeRandomBytes(file, 1);
@@ -68,6 +74,7 @@ class FileRestController {
 
   // https://docs.spring.io/spring-framework/reference/core/resources.html
   // https://spring.io/guides/gs/uploading-files
+  // Probably we can implement this sample https://www.baeldung.com/webclient-stream-large-byte-array-to-file#our-scenario-with-a-simple-server
 
   @GetMapping("/download-file")
   @ResponseBody

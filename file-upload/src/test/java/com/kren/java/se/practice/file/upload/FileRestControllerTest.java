@@ -2,6 +2,7 @@ package com.kren.java.se.practice.file.upload;
 
 import com.kren.java.se.practice.file.upload.test.util.FileUploadTestClient;
 import com.kren.java.se.practice.io.DataGeneratorUtil;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.nio.file.Paths;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -69,8 +71,10 @@ class FileRestControllerTest {
   }
 
   @Test
+  @SneakyThrows
   void downloadFile() {
-
+    var response = client.downloadFile();
+    response.getBody().getInputStream().transferTo(new FileOutputStream(Paths.get("target", "1111.txt").toFile()));
   }
 
   @AfterAll
