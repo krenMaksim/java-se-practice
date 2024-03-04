@@ -2,19 +2,41 @@ package com.kren.java.se.practice.file.upload;
 
 import com.kren.java.se.practice.io.ByteNioUtil;
 import com.kren.java.se.practice.io.ByteStreamsUtil;
+import com.kren.java.se.practice.io.DataGeneratorUtil;
+import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.PathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.nio.channels.Channels;
+import java.nio.file.Paths;
 
 @Slf4j
 @RestController
 class FileRestController {
+
+  private File file;
+
+  @SneakyThrows
+  @PostConstruct
+  void init() {
+    file = Paths.get("file-upload", "target", "controller_file.txt").toFile();
+    if (!file.exists()) {
+      file.createNewFile();
+      DataGeneratorUtil.writeRandomBytes(file, 1);
+    }
+  }
 
   // focus on ---------------------
 
@@ -44,6 +66,23 @@ class FileRestController {
     return processor.getReceivedBytes();
   }
 
+  // https://docs.spring.io/spring-framework/reference/core/resources.html
+  // https://spring.io/guides/gs/uploading-files
+
+  @GetMapping("/download-file")
+  @ResponseBody
+  public ResponseEntity<Resource> downloadFile() {
+
+    Resource file = new PathResource(this.file.toPath()); // storageService.loadAsResource(filename);
+
+    if (file == null) {
+      return ResponseEntity.notFound().build();
+    }
+
+    return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+        "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+  }
+
   // focus on ----------------
 
   // TBD
@@ -56,7 +95,6 @@ class FileRestController {
     // read file different methods
     // calculate size and return it
     // add tests showing how performance is different for different technology and buffer
-    // OPTIONAL extend existing implementation for characters
 
     // do the same functionality for downloading files
     // do the same functionality for Servlet API

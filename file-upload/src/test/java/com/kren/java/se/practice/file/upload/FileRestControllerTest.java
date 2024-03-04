@@ -5,6 +5,7 @@ import com.kren.java.se.practice.io.DataGeneratorUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,11 +61,16 @@ class FileRestControllerTest {
       0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096, 8192, 16384, 32768, 65536,
       0, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096, 8192, 16384, 32768, 65536
   })
-  void uploadFileBuffered(Integer bufferSizeBytes) {
+  void uploadFile(Integer bufferSizeBytes) {
     var response = client.uploadFile(file, bufferSizeBytes);
 
     assertThat(response.getStatusCode(), is(OK));
     assertThat(response.getBody(), is(FILE_SIZE_BYTE));
+  }
+
+  @Test
+  void downloadFile() {
+
   }
 
   @AfterAll
