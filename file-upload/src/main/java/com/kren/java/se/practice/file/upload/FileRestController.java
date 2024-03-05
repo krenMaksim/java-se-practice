@@ -79,53 +79,20 @@ class FileRestController {
   @GetMapping("/download-file")
   @ResponseBody
   public ResponseEntity<Resource> downloadFile() {
-
-    Resource file = new PathResource(this.file.toPath()); // storageService.loadAsResource(filename);
-
-    if (file == null) {
-      return ResponseEntity.notFound().build();
-    }
-
-    return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-        "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    var body = new PathResource(file.toPath());
+    var contentDisposition = String.format("attachment; filename=\"%s\"", body.getFilename());
+    return ResponseEntity.ok()
+        .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+        .body(body);
   }
 
   // focus on ----------------
 
   // TBD
-  @PostMapping("/upload-file-form-v2")
-  public String uploadFile2(
-      @RequestParam("file") MultipartFile file,
-      @RequestParam("io_lib") String lib, // io, nio
-      @RequestParam("buffer_size") Integer bufferSize) {
+  // read file different methods
+  // calculate size and return it
+  // add tests showing how performance is different for different technology and buffer
 
-    // read file different methods
-    // calculate size and return it
-    // add tests showing how performance is different for different technology and buffer
-
-    // do the same functionality for downloading files
-    // do the same functionality for Servlet API
-
-    log.info("Uploaded {}", file.getOriginalFilename());
-    readInputStream(file);
-    return file.getOriginalFilename();
-  }
-
-  private static final int EOF_BYTE = -1;
-
-  @SneakyThrows
-  private static void readInputStream(MultipartFile file) {
-    try (var input = new BufferedInputStream(file.getInputStream())) {
-      int byteOfData;
-      while ((byteOfData = input.read()) != EOF_BYTE) {
-        System.out.print((char) byteOfData);
-      }
-    }
-  }
-
-  // TBD
-  @PostMapping("/upload-file-binary")
-  public String uploadFileBinary(@RequestParam("data") MultipartFile file) {
-    return "fileUploadView";
-  }
+  // do the same functionality for downloading files
+  // do the same functionality for Servlet API
 }
