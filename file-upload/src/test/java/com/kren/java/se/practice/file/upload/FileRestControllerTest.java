@@ -83,7 +83,7 @@ class FileRestControllerTest {
         .transferTo(downloadedOutputStream);
 
     assertThat(response.getStatusCode(), is(OK));
-    assertThat(Files.size(downloadedFile), is(FILE_SIZE_BYTE_L));
+    assertThat(Files.size(downloadedFile), is(FileRestController.FILE_SIZE_BYTE));
 
     // TBD readble byte channel try from resource
   }

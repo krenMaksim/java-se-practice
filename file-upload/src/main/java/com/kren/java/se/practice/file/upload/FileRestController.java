@@ -26,6 +26,9 @@ import java.nio.file.Paths;
 @RestController
 class FileRestController {
 
+  private static final int FILE_SIZE_MB = 1;
+  static final long FILE_SIZE_BYTE = FILE_SIZE_MB * 1_000_000;
+
   private final Resource file;
 
   @SneakyThrows
@@ -33,7 +36,7 @@ class FileRestController {
     var file = Paths.get(tempFiles, "controller_file.txt");
     if (!Files.exists(file)) {
       Files.createFile(file);
-      DataGeneratorUtil.writeRandomBytes(file.toFile(), 1);
+      DataGeneratorUtil.writeRandomBytes(file.toFile(), FILE_SIZE_MB);
     }
     this.file = new PathResource(file);
   }
