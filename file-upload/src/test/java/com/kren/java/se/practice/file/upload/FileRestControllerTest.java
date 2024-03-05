@@ -1,6 +1,7 @@
 package com.kren.java.se.practice.file.upload;
 
 import com.kren.java.se.practice.file.upload.test.util.FileUploadTestClient;
+import com.kren.java.se.practice.io.ByteNioUtil;
 import com.kren.java.se.practice.io.DataGeneratorUtil;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.AfterAll;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import java.io.File;
+import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -84,8 +86,19 @@ class FileRestControllerTest {
 
     assertThat(response.getStatusCode(), is(OK));
     assertThat(Files.size(downloadedFile), is(FileRestController.FILE_SIZE_BYTE));
+  }
 
-    // TBD readble byte channel try from resource
+  @Test
+  @SneakyThrows
+  void downloadFileNio() {
+    var downloadedFile = Paths.get("target", "download.txt");
+
+    var response = client.downloadFile();
+    ReadableByteChannel channel = response.getBody().readableChannel();
+    ByteNioUtil.writeBytes(downloadedFile, channel, 48);
+
+    assertThat(response.getStatusCode(), is(OK));
+    assertThat(Files.size(downloadedFile), is(FileRestController.FILE_SIZE_BYTE));
   }
 
   @AfterAll

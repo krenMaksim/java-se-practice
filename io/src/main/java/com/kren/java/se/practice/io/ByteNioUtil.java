@@ -3,6 +3,7 @@ package com.kren.java.se.practice.io;
 import lombok.SneakyThrows;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
@@ -69,6 +70,19 @@ public class ByteNioUtil {
     var outputChannel = FileChannel.open(file, StandardOpenOption.WRITE);
     try (inputChannel; outputChannel) {
       outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
+    }
+  }
+
+  @SneakyThrows
+  public static void writeBytes(Path file, ReadableByteChannel inputChannel, int bufferCapacityBytes) {
+    try (var outputChannel = FileChannel.open(file, StandardOpenOption.WRITE)) {
+      readBytes(inputChannel, bufferCapacityBytes, buffer -> {
+        try {
+          outputChannel.write(buffer);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+      });
     }
   }
 }
