@@ -39,8 +39,7 @@ class FileRestController {
   }
 
   @PostMapping("/upload-file-form")
-  public Integer uploadFile(@RequestParam("file") MultipartFile file,
-      @RequestParam(value = "buffer_size") Integer bufferSizeBytes) {
+  Integer uploadFile(@RequestParam("file") MultipartFile file, @RequestParam(value = "buffer_size") Integer bufferSizeBytes) {
     var processor = new ByteProcessor();
     readFile(file, processor, bufferSizeBytes);
     return processor.getReceivedBytes();
@@ -57,8 +56,7 @@ class FileRestController {
 
   @SneakyThrows
   @PostMapping("/upload-file-nio-form")
-  public Integer uploadFileNio(@RequestParam("file") MultipartFile file,
-      @RequestParam(value = "buffer_size") Integer bufferSizeBytes) {
+  Integer uploadFileNio(@RequestParam("file") MultipartFile file, @RequestParam(value = "buffer_size") Integer bufferSizeBytes) {
     var processor = new ByteProcessor();
     ByteNioUtil.readBytes(Channels.newChannel(file.getInputStream()), bufferSizeBytes, processor::handleBuffer);
     return processor.getReceivedBytes();
@@ -70,7 +68,7 @@ class FileRestController {
 
   @GetMapping("/download-file")
   @ResponseBody
-  public ResponseEntity<Resource> downloadFile() {
+  ResponseEntity<Resource> downloadFile() {
     var contentDisposition = String.format("attachment; filename=\"%s\"", file.getFilename());
     return ResponseEntity.ok()
         .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
