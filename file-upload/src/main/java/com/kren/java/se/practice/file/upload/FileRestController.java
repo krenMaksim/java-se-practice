@@ -3,7 +3,6 @@ package com.kren.java.se.practice.file.upload;
 import com.kren.java.se.practice.io.ByteNioUtil;
 import com.kren.java.se.practice.io.ByteStreamsUtil;
 import com.kren.java.se.practice.io.DataGeneratorUtil;
-import jakarta.annotation.PostConstruct;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,32 +18,25 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.nio.channels.Channels;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @Slf4j
 @RestController
 class FileRestController {
 
-  private File file;
-
-  @Value("${spring.servlet.multipart.location}")
-  private String someFolder;
+  private final Resource file;
 
   @SneakyThrows
-  @PostConstruct
-  void init() {
-    System.out.println("11111" + someFolder);
-    file = Paths.get(someFolder, "controller_file.txt").toFile();
-    //    file = Paths.get("file-upload", "target", "controller_file.txt").toFile();
-    if (!file.exists()) {
-      file.createNewFile();
-      DataGeneratorUtil.writeRandomBytes(file, 1);
+  FileRestController(@Value("${spring.servlet.multipart.location}") String tempFiles) {
+    var file = Paths.get(tempFiles, "controller_file.txt");
+    if (!Files.exists(file)) {
+      Files.createFile(file);
+      DataGeneratorUtil.writeRandomBytes(file.toFile(), 1);
     }
+    this.file = new PathResource(file);
   }
-
-  // focus on ---------------------
 
   @PostMapping("/upload-file-form")
   public Integer uploadFile(@RequestParam("file") MultipartFile file,
@@ -79,14 +71,11 @@ class FileRestController {
   @GetMapping("/download-file")
   @ResponseBody
   public ResponseEntity<Resource> downloadFile() {
-    var body = new PathResource(file.toPath());
-    var contentDisposition = String.format("attachment; filename=\"%s\"", body.getFilename());
+    var contentDisposition = String.format("attachment; filename=\"%s\"", file.getFilename());
     return ResponseEntity.ok()
         .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
-        .body(body);
+        .body(file);
   }
-
-  // focus on ----------------
 
   // TBD
   // read file different methods
