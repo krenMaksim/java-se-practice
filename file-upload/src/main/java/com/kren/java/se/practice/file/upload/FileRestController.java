@@ -78,10 +78,14 @@ class FileRestController {
   }
 
   // TBD
-  // read file different methods
-  // calculate size and return it
-  // add tests showing how performance is different for different technology and buffer
+  // read file different methods [DONE]
+  // calculate size and return it [DONE]
+  // add tests showing how performance is different for different technology and buffer [DONE]
 
-  // do the same functionality for downloading files
-  // do the same functionality for Servlet API
+  // do the same functionality for downloading files [DONE]
+  // implement for Servlet API downloading and uploading file
+
+  // Follow-up questions
+  // Check out how data is downloaded on HTTP level (read about that)
+  // probably run curl request in debug mode to check it out
 }

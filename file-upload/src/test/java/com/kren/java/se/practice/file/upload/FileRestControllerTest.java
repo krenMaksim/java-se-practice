@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import java.io.File;
-import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -29,7 +28,6 @@ class FileRestControllerTest {
 
   private static final int FILE_SIZE_MB = 1;
   private static final int FILE_SIZE_BYTE = FILE_SIZE_MB * 1_000_000;
-  private static final long FILE_SIZE_BYTE_L = FILE_SIZE_BYTE;
   private static final String FILE_NAME = "random_bytes_data.txt";
 
   private static File file;
@@ -88,14 +86,17 @@ class FileRestControllerTest {
     assertThat(Files.size(downloadedFile), is(FileRestController.FILE_SIZE_BYTE));
   }
 
-  @Test
   @SneakyThrows
-  void downloadFileNio() {
+  @ParameterizedTest
+  @ValueSource(ints = {
+      1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 4096, 8192, 16384, 32768, 65536
+  })
+  void downloadFileNio(Integer bufferSizeBytes) {
     var downloadedFile = Paths.get("target", "download.txt");
 
     var response = client.downloadFile();
-    ReadableByteChannel channel = response.getBody().readableChannel();
-    ByteNioUtil.writeBytes(downloadedFile, channel, 48);
+    var channel = response.getBody().readableChannel();
+    ByteNioUtil.writeBytes(downloadedFile, channel, bufferSizeBytes);
 
     assertThat(response.getStatusCode(), is(OK));
     assertThat(Files.size(downloadedFile), is(FileRestController.FILE_SIZE_BYTE));
