@@ -34,10 +34,9 @@ class FileRestController {
   @SneakyThrows
   FileRestController(@Value("${spring.servlet.multipart.location}") String tempFiles) {
     var file = Paths.get(tempFiles, "controller_file.txt");
-    if (!Files.exists(file)) {
-      Files.createFile(file);
-      DataGeneratorUtil.writeRandomBytes(file.toFile(), FILE_SIZE_MB);
-    }
+    Files.deleteIfExists(file);
+    Files.createFile(file);
+    DataGeneratorUtil.writeRandomBytes(file.toFile(), FILE_SIZE_MB);
     this.file = new PathResource(file);
   }
 
