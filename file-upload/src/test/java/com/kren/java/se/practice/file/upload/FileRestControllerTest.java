@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 
 import java.io.File;
-import java.io.FileOutputStream;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -27,6 +27,7 @@ class FileRestControllerTest {
 
   private static final int FILE_SIZE_MB = 1;
   private static final int FILE_SIZE_BYTE = FILE_SIZE_MB * 1_000_000;
+  private static final long FILE_SIZE_BYTE_L = FILE_SIZE_BYTE;
   private static final String FILE_NAME = "random_bytes_data.txt";
 
   private static File file;
@@ -73,13 +74,16 @@ class FileRestControllerTest {
   @Test
   @SneakyThrows
   void downloadFile() {
-    var outFile = Paths.get("target", "1111.txt").toFile();
-    var response = client.downloadFile();
+    var downloadedFile = Paths.get("target", "download.txt");
+    var downloadedOutputStream = Files.newOutputStream(downloadedFile);
 
-    response.getBody().getInputStream().transferTo(new FileOutputStream(outFile));
+    var response = client.downloadFile();
+    response.getBody()
+        .getInputStream()
+        .transferTo(downloadedOutputStream);
 
     assertThat(response.getStatusCode(), is(OK));
-    assertThat(outFile.length(), is(Long.valueOf(FILE_SIZE_BYTE)));
+    assertThat(Files.size(downloadedFile), is(FILE_SIZE_BYTE_L));
 
     // TBD readble byte channel try from resource
   }
