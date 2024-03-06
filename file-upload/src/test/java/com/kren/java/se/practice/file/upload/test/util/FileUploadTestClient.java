@@ -26,7 +26,7 @@ public class FileUploadTestClient {
     return uploadFile("/upload-file-nio-form", file, bufferSizeBytes);
   }
 
-  private ResponseEntity<Integer> uploadFile(String path, File file, Integer bufferSizeBytes) {
+  public ResponseEntity<Integer> uploadFile(String path, File file, Integer bufferSizeBytes) {
     var headers = new HttpHeaders();
     headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
