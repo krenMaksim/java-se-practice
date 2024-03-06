@@ -8,8 +8,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(urlPatterns = "/file-servlet", loadOnStartup = 1)
-public class FileServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/servlet/upload-file", loadOnStartup = 1)
+public class FileUploaderServlet extends HttpServlet {
 
   private static final long serialVersionUID = 1L;
 
