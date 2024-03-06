@@ -87,4 +87,5 @@ class FileRestController {
   // Follow-up questions
   // Check out how data is downloaded on HTTP level (read about that)
   // probably run curl request in debug mode to check it out
+  // try downloading file through Postman console to see details
 }
