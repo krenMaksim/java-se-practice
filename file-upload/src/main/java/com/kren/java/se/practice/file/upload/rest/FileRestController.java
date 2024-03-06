@@ -18,12 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedInputStream;
+import java.io.InputStream;
 import java.nio.channels.Channels;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
 @RestController
-class FileRestController {
+public class FileRestController {
 
   private static final int FILE_SIZE_MB = 1;
   static final long FILE_SIZE_BYTE = FILE_SIZE_MB * 1_000_000;
@@ -39,19 +40,21 @@ class FileRestController {
     this.file = new PathResource(file);
   }
 
+  @SneakyThrows
   @PostMapping("/upload-file-form")
   Integer uploadFile(@RequestParam("file") MultipartFile file, @RequestParam(value = "buffer_size") Integer bufferSizeBytes) {
     var processor = new ByteProcessor();
-    readFile(file, processor, bufferSizeBytes);
+    var inputStream = file.getInputStream();
+    readFile(inputStream, processor, bufferSizeBytes);
     return processor.getReceivedBytes();
   }
 
   @SneakyThrows
-  private void readFile(MultipartFile file, ByteProcessor processor, Integer bufferSizeBytes) {
+  public static void readFile(InputStream inputStream, ByteProcessor processor, Integer bufferSizeBytes) {
     if (bufferSizeBytes == 0) {
-      ByteStreamsUtil.readInputStream(file.getInputStream(), processor::handleByte);
+      ByteStreamsUtil.readInputStream(inputStream, processor::handleByte);
     } else {
-      ByteStreamsUtil.readInputStream(new BufferedInputStream(file.getInputStream(), bufferSizeBytes), processor::handleByte);
+      ByteStreamsUtil.readInputStream(new BufferedInputStream(inputStream, bufferSizeBytes), processor::handleByte);
     }
   }
 
