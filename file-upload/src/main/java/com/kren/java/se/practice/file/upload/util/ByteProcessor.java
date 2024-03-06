@@ -1,10 +1,10 @@
-package com.kren.java.se.practice.file.upload;
+package com.kren.java.se.practice.file.upload.util;
 
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
 import java.util.List;
 
-class ByteProcessor {
+public class ByteProcessor {
 
   private final List<Number> data;
 

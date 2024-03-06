@@ -1,5 +1,6 @@
-package com.kren.java.se.practice.file.upload;
+package com.kren.java.se.practice.file.upload.rest;
 
+import com.kren.java.se.practice.file.upload.rest.FileRestController;
 import com.kren.java.se.practice.file.upload.test.util.FileUploadTestClient;
 import com.kren.java.se.practice.io.ByteNioUtil;
 import com.kren.java.se.practice.io.DataGeneratorUtil;

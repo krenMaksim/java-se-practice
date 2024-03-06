@@ -1,10 +1,10 @@
-package com.kren.java.se.practice.file.upload;
+package com.kren.java.se.practice.file.upload.rest;
 
+import com.kren.java.se.practice.file.upload.util.ByteProcessor;
 import com.kren.java.se.practice.io.ByteNioUtil;
 import com.kren.java.se.practice.io.ByteStreamsUtil;
 import com.kren.java.se.practice.io.DataGeneratorUtil;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.Resource;
@@ -22,7 +22,6 @@ import java.nio.channels.Channels;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-@Slf4j
 @RestController
 class FileRestController {
 
