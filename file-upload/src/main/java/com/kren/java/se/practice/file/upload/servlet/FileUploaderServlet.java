@@ -19,13 +19,11 @@ public class FileUploaderServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-    var bufferSize = request.getParameter("buffer_size");
-    var part = request.getPart("file");
-
+    var bufferSize = Integer.valueOf(request.getParameter("buffer_size"));
+    var inputStream = request.getPart("file").getInputStream();
     var processor = new ByteProcessor();
-    var inputStream = part.getInputStream();
 
-    FileRestController.readFile(inputStream, processor, Integer.valueOf(bufferSize));
+    FileRestController.readFile(inputStream, processor, bufferSize);
 
     response.setContentType("application/json");
     PrintWriter out = response.getWriter();

@@ -85,7 +85,7 @@ public class FileRestController {
   // add tests showing how performance is different for different technology and buffer [DONE]
 
   // do the same functionality for downloading files [DONE]
-  // implement for Servlet API downloading and uploading file
+  // implement for Servlet API downloading and uploading file [DONE]
 
   // Follow-up questions
   // Check out how data is downloaded on HTTP level (read about that)
