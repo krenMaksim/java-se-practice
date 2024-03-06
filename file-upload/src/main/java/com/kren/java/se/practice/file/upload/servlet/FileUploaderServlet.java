@@ -14,12 +14,8 @@ public class FileUploaderServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    doGet(request, response);
-  }
-
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("text/html");
+    response.setContentType("application/json");
     PrintWriter out = response.getWriter();
-    out.println("<h3>Hello India!</h3>");
+    out.println(1000000);
   }
 }
