@@ -39,7 +39,6 @@ public class FileUploadTestClient {
     return restTemplate.postForEntity(path, requestEntity, Integer.class);
   }
 
-  // TBD think about for instance java HTTP client to come up with a tech agnostic solution
   public ResponseEntity<Resource> downloadFile() {
     return restTemplate.getForEntity("/download-file", Resource.class);
   }

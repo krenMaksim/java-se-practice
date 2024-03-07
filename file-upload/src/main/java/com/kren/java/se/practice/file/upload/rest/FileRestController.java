@@ -23,6 +23,11 @@ import java.nio.channels.Channels;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+/*
+  https://docs.spring.io/spring-framework/reference/core/resources.html
+  https://spring.io/guides/gs/uploading-files
+ */
+
 @RestController
 public class FileRestController {
 
@@ -66,10 +71,6 @@ public class FileRestController {
     return processor.getReceivedBytes();
   }
 
-  // https://docs.spring.io/spring-framework/reference/core/resources.html
-  // https://spring.io/guides/gs/uploading-files
-  // Probably we can implement this sample https://www.baeldung.com/webclient-stream-large-byte-array-to-file#our-scenario-with-a-simple-server
-
   @GetMapping("/download-file")
   @ResponseBody
   ResponseEntity<Resource> downloadFile() {
@@ -78,17 +79,4 @@ public class FileRestController {
         .header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
         .body(file);
   }
-
-  // TBD
-  // read file different methods [DONE]
-  // calculate size and return it [DONE]
-  // add tests showing how performance is different for different technology and buffer [DONE]
-
-  // do the same functionality for downloading files [DONE]
-  // implement for Servlet API downloading and uploading file [DONE]
-
-  // Follow-up questions
-  // Check out how data is downloaded on HTTP level (read about that)
-  // probably run curl request in debug mode to check it out
-  // try downloading file through Postman console to see details
 }
