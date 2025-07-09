@@ -11,6 +11,7 @@
     <modules>
         <module>io</module>
         <module>file-upload</module>
+        <module>unit-test-kata</module>
     </modules>
 
     <properties>

@@ -1,0 +1,241 @@
+package com.kren.java.se.practice;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
+
+import static java.util.Objects.isNull;
+import static java.util.Objects.nonNull;
+import static java.util.function.Predicate.not;
+import static java.util.stream.Collectors.toMap;
+
+// TBD the code looks good. Let's focus on unit tests
+// let's create a backup copy
+// let's add missing tests
+
+class BowlingGame {
+
+  private final FallenPinsGenerator fallenPinsGenerator;
+  private final Map<Player, Frame> currentFrameByPlayer;
+
+  public BowlingGame(FallenPinsGenerator fallenPinsGenerator) {
+    this.fallenPinsGenerator = fallenPinsGenerator;
+    this.currentFrameByPlayer = Stream.of(Player.values())
+        .collect(toMap(Function.identity(), player -> Frame.newInstance()));
+  }
+
+  public boolean isInProgress() {
+    FrameNumber currentFrame = getCurrentFrameNumber();
+    return !(isCurrentFrameCompletedByAllPlayers() && currentFrame.equals(FrameNumber.TEN));
+  }
+
+  public BowlingGame playFrame() {
+    if (isCurrentFrameCompletedByAllPlayers()) {
+      startNextFrame();
+    }
+    return this;
+  }
+
+  private void startNextFrame() {
+    currentFrameByPlayer.entrySet()
+        .forEach(entry -> entry.setValue(entry.getValue().next));
+  }
+
+  private boolean isCurrentFrameCompletedByAllPlayers() {
+    return currentFrameByPlayer.values()
+        .stream()
+        .anyMatch(not(Frame::isInProgress));
+  }
+
+  public BowlingGame rollBall(Player player) {
+    Objects.requireNonNull(player);
+    Player currentPlayer = getCurrentPlayer();
+
+    if (!currentPlayer.equals(player)) {
+      throw new IllegalArgumentException(String.format("Current player %s has one more roll", currentPlayer));
+    }
+
+    int fallenPins = fallenPinsGenerator.getNumber();
+    currentFrameByPlayer.get(currentPlayer).logFallenPins(fallenPins);
+
+    return this;
+  }
+
+  private Player getCurrentPlayer() {
+    return currentFrameByPlayer.entrySet()
+        .stream()
+        .filter(entry -> entry.getValue().isInProgress())
+        .map(Map.Entry::getKey)
+        .findFirst()
+        .orElseThrow();
+  }
+
+  public FrameNumber getCurrentFrameNumber() {
+    return currentFrameByPlayer.values()
+        .stream()
+        .findFirst()
+        .orElseThrow()
+        .frameNumber;
+  }
+
+  public int getScore(FrameNumber frameNumber, Player player) {
+    return currentFrameByPlayer.get(player)
+        .findFrame(frameNumber)
+        .calculateScore();
+  }
+
+  private static class Frame {
+
+    public static Frame newInstance() {
+      Frame[] frames = Stream.of(FrameNumber.values())
+          .map(Frame::new)
+          .toArray(Frame[]::new);
+
+      for (int i = 0; i < frames.length; i++) {
+        if (i != 0) {
+          frames[i].previous = frames[i - 1];
+        }
+        if (i != frames.length - 1) {
+          frames[i].next = frames[i + 1];
+        }
+      }
+
+      return frames[0];
+    }
+
+    private static final int ALL_PINS = 10;
+
+    private Integer fallenPinsFirstRoll;
+    private Integer fallenPinsSecondRoll;
+    private Frame next;
+    private Frame previous;
+    private final FrameNumber frameNumber;
+
+    private Frame(FrameNumber frameNumber) {
+      this.frameNumber = frameNumber;
+    }
+
+    public void logFallenPins(int fallenPins) {
+      if (isInProgress()) {
+        if (isNull(fallenPinsFirstRoll)) {
+          fallenPinsFirstRoll = fallenPins;
+        } else {
+          fallenPinsSecondRoll = fallenPins;
+        }
+      } else {
+        throw new IllegalArgumentException("Number rolls exceeded");
+      }
+    }
+
+    public boolean isInProgress() {
+      return (isNull(fallenPinsFirstRoll) && isNull(fallenPinsSecondRoll))
+          || (!isStrike() && isNull(fallenPinsSecondRoll));
+    }
+
+    private boolean isStrike() {
+      return fallenPinsFirstRoll == ALL_PINS;
+    }
+
+    public int calculateScore() {
+      return new Score().calculate();
+    }
+
+    public Frame findFrame(FrameNumber frameNumber) {
+      return findFrame(frameNumber, frame -> frame.next)
+          .or(() -> findFrame(frameNumber, frame -> frame.previous))
+          .orElseThrow();
+    }
+
+    private Optional<Frame> findFrame(FrameNumber frameNumber, UnaryOperator<Frame> iterateOverFrames) {
+      return Stream.iterate(this, Objects::nonNull, iterateOverFrames)
+          .filter(frame -> frame.frameNumber == frameNumber)
+          .findFirst();
+    }
+
+    private class Score {
+
+      private static final int NO_SCORE_CALCULATED = -1;
+
+      public int calculate() {
+        int fallenPinsTotal = calculateFallenPinsTotal();
+        if (fallenPinsTotal != NO_SCORE_CALCULATED) {
+          return Optional.ofNullable(previous)
+              .map(previousFrame -> previousFrame.calculateScore() + fallenPinsTotal)
+              .orElse(fallenPinsTotal);
+        } else {
+          return NO_SCORE_CALCULATED;
+        }
+      }
+
+      private int calculateFallenPinsTotal() {
+        if (isFrameCompleted()) {
+          if (isSpare() && isOneExtraBallRolled()) {
+            return fallenPinsFirstRoll + fallenPinsSecondRoll + next.fallenPinsFirstRoll;
+          } else if (isStrike() && areTwoExtraBallsRolled()) {
+            return fallenPinsFirstRoll + next.fallenPinsFirstRoll + next.fallenPinsSecondRoll;
+          } else if (!isSpare() && !isStrike()) {
+            return fallenPinsFirstRoll + fallenPinsSecondRoll;
+          }
+        }
+        return NO_SCORE_CALCULATED;
+      }
+
+      private boolean isFrameCompleted() {
+        return !isInProgress();
+      }
+
+      private boolean isSpare() {
+        return (nonNull(fallenPinsFirstRoll) && nonNull(fallenPinsSecondRoll))
+            && (fallenPinsFirstRoll + fallenPinsSecondRoll == ALL_PINS);
+      }
+
+      private boolean isOneExtraBallRolled() {
+        return nonNull(next) && nonNull(next.fallenPinsFirstRoll);
+      }
+
+      private boolean areTwoExtraBallsRolled() {
+        return isOneExtraBallRolled() && nonNull(next.fallenPinsSecondRoll);
+      }
+    }
+  }
+
+  public enum Player {
+    ONE, TWO
+  }
+
+  public enum FrameNumber {
+    ONE(1),
+    TWO(2),
+    THREE(3),
+    FOUR(4),
+    FIVE(5),
+    SIX(6),
+    SEVEN(7),
+    EIGHT(8),
+    NINE(9),
+    TEN(-1) {
+      @Override
+      public FrameNumber next() {
+        throw new IllegalArgumentException("Game is over already");
+      }
+    };
+
+    private final int nextFrameIndex;
+
+    FrameNumber(int nextFrameIndex) {
+      this.nextFrameIndex = nextFrameIndex;
+    }
+
+    public FrameNumber next() {
+      return FrameNumber.values()[nextFrameIndex];
+    }
+  }
+
+  public interface FallenPinsGenerator {
+
+    int getNumber();
+  }
+}
