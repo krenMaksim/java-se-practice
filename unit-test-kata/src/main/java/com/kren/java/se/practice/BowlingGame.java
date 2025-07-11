@@ -176,6 +176,8 @@ class BowlingGame {
             return fallenPinsFirstRoll + fallenPinsSecondRoll + next.fallenPinsFirstRoll;
           } else if (isStrike() && areTwoExtraBallsRolled()) {
             return fallenPinsFirstRoll + next.fallenPinsFirstRoll + next.fallenPinsSecondRoll;
+          } else if (isStrike() && areTwoExtraBallsRolledWhenFirstRollIsStrike()) {
+            return fallenPinsFirstRoll + next.fallenPinsFirstRoll + next.next.fallenPinsFirstRoll;
           } else if (!isSpare() && !isStrike()) {
             return fallenPinsFirstRoll + fallenPinsSecondRoll;
           }
@@ -198,6 +200,13 @@ class BowlingGame {
 
       private boolean areTwoExtraBallsRolled() {
         return isOneExtraBallRolled() && nonNull(next.fallenPinsSecondRoll);
+      }
+
+      private boolean areTwoExtraBallsRolledWhenFirstRollIsStrike() {
+        return isOneExtraBallRolled()
+            && next.isStrike()
+            && nonNull(next.next)
+            && nonNull(next.next.fallenPinsFirstRoll);
       }
     }
   }

@@ -3,6 +3,7 @@ package com.kren.java.se.practice;
 import com.kren.java.se.practice.BowlingGame.FallenPinsGenerator;
 import com.kren.java.se.practice.BowlingGame.FrameNumber;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -280,13 +281,16 @@ class BowlingGameTest {
   }
 
   @Test
+  @Timeout(30)
   void calculateScoreForAllStrikes() {
     when(generator.getNumber()).thenReturn(10);
 
-    playGame(10);
-    //    game.playFrame().rollBall(Player.TWO);
-    //    game.playFrame().rollBall(Player.TWO);
-    // TBD fix non-stable tests
+    while (game.isInProgress()) {
+      game.playFrame()
+          .rollBall(Player.ONE)
+          .rollBall(Player.TWO);
+    }
+
     assertEquals(30, game.getScore(FrameNumber.ONE, Player.ONE));
     assertEquals(60, game.getScore(FrameNumber.TWO, Player.ONE));
     assertEquals(90, game.getScore(FrameNumber.THREE, Player.ONE));
