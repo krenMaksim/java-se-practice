@@ -139,6 +139,11 @@ class BowlingGame {
       return fallenPinsFirstRoll == ALL_PINS;
     }
 
+    private boolean isSpare() {
+      return (nonNull(fallenPinsFirstRoll) && nonNull(fallenPinsSecondRoll))
+          && (fallenPinsFirstRoll + fallenPinsSecondRoll == ALL_PINS);
+    }
+
     public int calculateScore() {
       return new Score().calculate();
     }
@@ -170,7 +175,7 @@ class BowlingGame {
         }
       }
 
-      private int calculateFallenPinsTotal() {
+      protected int calculateFallenPinsTotal() {
         if (isFrameCompleted()) {
           if (isSpare() && isOneExtraBallRolled()) {
             return fallenPinsFirstRoll + fallenPinsSecondRoll + next.fallenPinsFirstRoll;
@@ -189,16 +194,11 @@ class BowlingGame {
         return !isInProgress();
       }
 
-      private boolean isSpare() {
-        return (nonNull(fallenPinsFirstRoll) && nonNull(fallenPinsSecondRoll))
-            && (fallenPinsFirstRoll + fallenPinsSecondRoll == ALL_PINS);
-      }
-
-      private boolean isOneExtraBallRolled() {
+      protected boolean isOneExtraBallRolled() {
         return nonNull(next) && nonNull(next.fallenPinsFirstRoll);
       }
 
-      private boolean areTwoExtraBallsRolled() {
+      protected boolean areTwoExtraBallsRolled() {
         return isOneExtraBallRolled() && nonNull(next.fallenPinsSecondRoll);
       }
 
@@ -207,6 +207,72 @@ class BowlingGame {
             && next.isStrike()
             && nonNull(next.next)
             && nonNull(next.next.fallenPinsFirstRoll);
+      }
+    }
+  }
+
+  private static class FrameTen extends Frame {
+
+    private Integer fallenPinsFirstExtraRoll;
+    private Integer fallenPinsSecondExtraRoll;
+
+    FrameTen(FrameNumber frameNumber) {
+      super(frameNumber);
+    }
+
+    @Override
+    public void logFallenPins(int fallenPins) {
+      if (isInProgress()) {
+        if (isNull(super.fallenPinsFirstRoll)) {
+          super.fallenPinsFirstRoll = fallenPins;
+        } else if (isNull(super.fallenPinsSecondRoll)) {
+          super.fallenPinsSecondRoll = fallenPins;
+        } else if (isNull(fallenPinsFirstExtraRoll)) {
+          fallenPinsFirstExtraRoll = fallenPins;
+        } else {
+          fallenPinsSecondExtraRoll = fallenPins;
+        }
+      } else {
+        throw new IllegalArgumentException("Number rolls exceeded");
+      }
+    }
+
+    @Override
+    public boolean isInProgress() {
+      return super.isInProgress()
+          || (super.isSpare() && isNull(fallenPinsFirstExtraRoll))
+          || (super.isStrike() && (isNull(fallenPinsFirstExtraRoll) || isNull(fallenPinsSecondExtraRoll)));
+    }
+
+    @Override
+    public int calculateScore() {
+      return new ScoreTen().calculate();
+    }
+
+    private class ScoreTen extends Frame.Score {
+
+      @Override
+      protected int calculateFallenPinsTotal() {
+        if (super.isFrameCompleted()) {
+          if (FrameTen.super.isSpare() && isOneExtraBallRolled()) {
+            return FrameTen.super.fallenPinsFirstRoll + FrameTen.super.fallenPinsSecondRoll + fallenPinsFirstExtraRoll;
+          } else if (FrameTen.super.isStrike() && areTwoExtraBallsRolled()) {
+            return FrameTen.super.fallenPinsFirstRoll + fallenPinsFirstExtraRoll + fallenPinsSecondExtraRoll;
+          } else if (!FrameTen.super.isSpare() && !FrameTen.super.isStrike()) {
+            return FrameTen.super.fallenPinsFirstRoll + FrameTen.super.fallenPinsSecondRoll;
+          }
+        }
+        return Frame.Score.NO_SCORE_CALCULATED;
+      }
+
+      @Override
+      protected boolean isOneExtraBallRolled() {
+        return nonNull(fallenPinsFirstExtraRoll);
+      }
+
+      @Override
+      protected boolean areTwoExtraBallsRolled() {
+        return isOneExtraBallRolled() && nonNull(fallenPinsSecondExtraRoll);
       }
     }
   }
