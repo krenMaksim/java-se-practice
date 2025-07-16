@@ -52,7 +52,7 @@ class BowlingGame {
 
   public BowlingGame rollBall(Player player) {
     Objects.requireNonNull(player);
-    Player currentPlayer = getCurrentPlayer(); // TBD fix the logic
+    Player currentPlayer = getCurrentPlayer();
 
     if (nonNull(currentPlayer) && !player.equals(currentPlayer)) {
       throw new IllegalArgumentException(String.format("Current player %s has one more roll", currentPlayer));
@@ -64,7 +64,6 @@ class BowlingGame {
     return this;
   }
 
-  // TBD Here the problem with identifying current player and using it
   private Player getCurrentPlayer() {
     return currentFrameByPlayer.entrySet()
         .stream()
@@ -130,22 +129,10 @@ class BowlingGame {
       } else {
         throw new IllegalArgumentException("Number rolls exceeded");
       }
-
-      //      if (isInProgress()) {
-      //        if (isNull(fallenPinsFirstRoll)) {
-      //          fallenPinsFirstRoll = fallenPins;
-      //        } else {
-      //          fallenPinsSecondRoll = fallenPins;
-      //        }
-      //      } else {
-      //        throw new IllegalArgumentException("Number rolls exceeded");
-      //      }
     }
 
     public boolean isInProgress() {
       return isNull(fallenPinsSecondRoll) && !isStrike();
-      //      return (isNull(fallenPinsFirstRoll) && isNull(fallenPinsSecondRoll))
-      //          || (!isStrike() && isNull(fallenPinsSecondRoll));
     }
 
     private boolean isStrike() {
