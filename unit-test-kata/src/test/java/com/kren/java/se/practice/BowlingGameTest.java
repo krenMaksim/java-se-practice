@@ -111,6 +111,11 @@ class BowlingGameTest {
     assertNotEquals(frame, newFrame);
   }
 
+  //  @Test
+  //  void someTest() {
+  //    System.out.println(new BowlingGame.FrameTen().isInProgress());
+  //  }
+
   @Test
   void startGameWithFirstFrame() {
     game.playFrame();

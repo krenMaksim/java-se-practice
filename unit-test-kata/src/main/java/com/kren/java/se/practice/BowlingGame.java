@@ -52,25 +52,26 @@ class BowlingGame {
 
   public BowlingGame rollBall(Player player) {
     Objects.requireNonNull(player);
-    Player currentPlayer = getCurrentPlayer();
+    Player currentPlayer = getCurrentPlayer(); // TBD fix the logic
 
-    if (!currentPlayer.equals(player)) {
+    if (nonNull(currentPlayer) && !player.equals(currentPlayer)) {
       throw new IllegalArgumentException(String.format("Current player %s has one more roll", currentPlayer));
     }
 
     int fallenPins = fallenPinsGenerator.getNumber();
-    currentFrameByPlayer.get(currentPlayer).logFallenPins(fallenPins);
+    currentFrameByPlayer.get(player).logFallenPins(fallenPins);
 
     return this;
   }
 
+  // TBD Here the problem with identifying current player and using it
   private Player getCurrentPlayer() {
     return currentFrameByPlayer.entrySet()
         .stream()
         .filter(entry -> entry.getValue().isInProgress())
         .map(Map.Entry::getKey)
         .findFirst()
-        .orElseThrow();
+        .orElse(null);
   }
 
   public FrameNumber getCurrentFrameNumber() {
@@ -95,7 +96,7 @@ class BowlingGame {
           .toArray(Frame[]::new);
 
       // TBD
-      //      frames[frames.length - 1] = new FrameTen(FrameNumber.TEN);
+      //      frames[frames.length - 1] = new FrameTen();
 
       for (int i = 0; i < frames.length; i++) {
         if (i != 0) {
@@ -122,24 +123,34 @@ class BowlingGame {
     }
 
     public void logFallenPins(int fallenPins) {
-      if (isInProgress()) {
-        if (isNull(fallenPinsFirstRoll)) {
-          fallenPinsFirstRoll = fallenPins;
-        } else {
-          fallenPinsSecondRoll = fallenPins;
-        }
+      if (isNull(fallenPinsFirstRoll)) {
+        fallenPinsFirstRoll = fallenPins;
+      } else if (isInProgress()) {
+        fallenPinsSecondRoll = fallenPins;
       } else {
         throw new IllegalArgumentException("Number rolls exceeded");
       }
+
+      //      if (isInProgress()) {
+      //        if (isNull(fallenPinsFirstRoll)) {
+      //          fallenPinsFirstRoll = fallenPins;
+      //        } else {
+      //          fallenPinsSecondRoll = fallenPins;
+      //        }
+      //      } else {
+      //        throw new IllegalArgumentException("Number rolls exceeded");
+      //      }
     }
 
     public boolean isInProgress() {
-      return (isNull(fallenPinsFirstRoll) && isNull(fallenPinsSecondRoll))
-          || (!isStrike() && isNull(fallenPinsSecondRoll));
+      return isNull(fallenPinsSecondRoll) && !isStrike();
+      //      return (isNull(fallenPinsFirstRoll) && isNull(fallenPinsSecondRoll))
+      //          || (!isStrike() && isNull(fallenPinsSecondRoll));
     }
 
     private boolean isStrike() {
-      return fallenPinsFirstRoll == ALL_PINS;
+      return nonNull(fallenPinsFirstRoll)
+          && (fallenPinsFirstRoll == ALL_PINS);
     }
 
     private boolean isSpare() {
@@ -194,7 +205,8 @@ class BowlingGame {
       }
 
       private boolean isFrameCompleted() {
-        return !isInProgress();
+        return (nonNull(fallenPinsFirstRoll) && nonNull(fallenPinsSecondRoll))
+            || isStrike();
       }
 
       protected boolean isOneExtraBallRolled() {
@@ -214,13 +226,13 @@ class BowlingGame {
     }
   }
 
-  private static class FrameTen extends Frame {
+  public static class FrameTen extends Frame {
 
     private Integer fallenPinsFirstExtraRoll;
     private Integer fallenPinsSecondExtraRoll;
 
-    FrameTen(FrameNumber frameNumber) {
-      super(frameNumber);
+    FrameTen() {
+      super(FrameNumber.TEN);
     }
 
     @Override
