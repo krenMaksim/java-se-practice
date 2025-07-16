@@ -9,6 +9,7 @@ import java.util.stream.Stream;
 
 import static java.util.Objects.isNull;
 import static java.util.Objects.nonNull;
+import static java.util.function.Predicate.isEqual;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toMap;
 
@@ -52,11 +53,11 @@ class BowlingGame {
 
   public BowlingGame rollBall(Player player) {
     Objects.requireNonNull(player);
-    Player currentPlayer = getCurrentPlayer();
-
-    if (nonNull(currentPlayer) && !player.equals(currentPlayer)) {
-      throw new IllegalArgumentException(String.format("Current player %s has one more roll", currentPlayer));
-    }
+    getCurrentPlayer()
+        .filter(not(isEqual(player)))
+        .ifPresent(p -> {
+          throw new IllegalArgumentException(String.format("Current player %s has one more roll", p));
+        });
 
     int fallenPins = fallenPinsGenerator.getNumber();
     currentFrameByPlayer.get(player).logFallenPins(fallenPins);
@@ -64,13 +65,12 @@ class BowlingGame {
     return this;
   }
 
-  private Player getCurrentPlayer() {
+  private Optional<Player> getCurrentPlayer() {
     return currentFrameByPlayer.entrySet()
         .stream()
         .filter(entry -> entry.getValue().isInProgress())
         .map(Map.Entry::getKey)
-        .findFirst()
-        .orElse(null);
+        .findFirst();
   }
 
   public FrameNumber getCurrentFrameNumber() {
