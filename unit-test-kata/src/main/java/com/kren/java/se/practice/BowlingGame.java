@@ -48,7 +48,9 @@ class BowlingGame {
   private boolean isCurrentFrameCompletedByAllPlayers() {
     return currentFrameByPlayer.values()
         .stream()
-        .anyMatch(not(Frame::isInProgress));
+        .filter(not(Frame::isFrameCompleted))
+        .findAny()
+        .isEmpty();
   }
 
   public BowlingGame rollBall(Player player) {
@@ -132,7 +134,7 @@ class BowlingGame {
     }
 
     public boolean isInProgress() {
-      return isNull(fallenPinsSecondRoll) && !isStrike();
+      return nonNull(fallenPinsFirstRoll) && !isStrike() && isNull(fallenPinsSecondRoll);
     }
 
     private boolean isStrike() {
@@ -143,6 +145,11 @@ class BowlingGame {
     private boolean isSpare() {
       return (nonNull(fallenPinsFirstRoll) && nonNull(fallenPinsSecondRoll))
           && (fallenPinsFirstRoll + fallenPinsSecondRoll == ALL_PINS);
+    }
+
+    public boolean isFrameCompleted() {
+      return (nonNull(fallenPinsFirstRoll) && nonNull(fallenPinsSecondRoll))
+          || isStrike();
     }
 
     public int calculateScore() {
@@ -189,11 +196,6 @@ class BowlingGame {
           }
         }
         return NO_SCORE_CALCULATED;
-      }
-
-      private boolean isFrameCompleted() {
-        return (nonNull(fallenPinsFirstRoll) && nonNull(fallenPinsSecondRoll))
-            || isStrike();
       }
 
       protected boolean isOneExtraBallRolled() {
@@ -255,7 +257,7 @@ class BowlingGame {
 
       @Override
       protected int calculateFallenPinsTotal() {
-        if (super.isFrameCompleted()) {
+        if (FrameTen.super.isFrameCompleted()) {
           if (FrameTen.super.isSpare() && isOneExtraBallRolled()) {
             return FrameTen.super.fallenPinsFirstRoll + FrameTen.super.fallenPinsSecondRoll + fallenPinsFirstExtraRoll;
           } else if (FrameTen.super.isStrike() && areTwoExtraBallsRolled()) {

@@ -141,7 +141,7 @@ class BowlingGameTest {
     var ex = assertThrows(
         IllegalArgumentException.class,
         () -> game.rollBall(Player.ONE));
-    assertEquals("Current player TWO has one more roll", ex.getMessage());
+    assertEquals("Number rolls exceeded", ex.getMessage());
   }
 
   @Test
