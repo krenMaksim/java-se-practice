@@ -97,7 +97,7 @@ class BowlingGame {
           .toArray(Frame[]::new);
 
       // TBD
-      //      frames[frames.length - 1] = new FrameTen();
+      frames[frames.length - 1] = new FrameTen();
 
       for (int i = 0; i < frames.length; i++) {
         if (i != 0) {
@@ -226,16 +226,14 @@ class BowlingGame {
 
     @Override
     public void logFallenPins(int fallenPins) {
-      if (isInProgress()) {
-        if (isNull(super.fallenPinsFirstRoll)) {
-          super.fallenPinsFirstRoll = fallenPins;
-        } else if (isNull(super.fallenPinsSecondRoll)) {
-          super.fallenPinsSecondRoll = fallenPins;
-        } else if (isNull(fallenPinsFirstExtraRoll)) {
-          fallenPinsFirstExtraRoll = fallenPins;
-        } else {
-          fallenPinsSecondExtraRoll = fallenPins;
-        }
+      if (isNull(super.fallenPinsFirstRoll)) {
+        super.fallenPinsFirstRoll = fallenPins;
+      } else if (isNull(super.fallenPinsSecondRoll)) {
+        super.fallenPinsSecondRoll = fallenPins;
+      } else if ((super.isSpare() || super.isStrike()) && isNull(fallenPinsFirstExtraRoll)) {
+        fallenPinsFirstExtraRoll = fallenPins;
+      } else if (super.isStrike() && isNull(fallenPinsSecondExtraRoll)) {
+        fallenPinsSecondExtraRoll = fallenPins;
       } else {
         throw new IllegalArgumentException("Number rolls exceeded");
       }
@@ -246,6 +244,13 @@ class BowlingGame {
       return super.isInProgress()
           || (super.isSpare() && isNull(fallenPinsFirstExtraRoll))
           || (super.isStrike() && (isNull(fallenPinsFirstExtraRoll) || isNull(fallenPinsSecondExtraRoll)));
+    }
+
+    @Override
+    public boolean isFrameCompleted() {
+      return (nonNull(super.fallenPinsFirstRoll) && nonNull(super.fallenPinsSecondRoll) && !super.isSpare())
+          || (super.isSpare() && nonNull(fallenPinsFirstExtraRoll))
+          || (super.isStrike() && nonNull(fallenPinsFirstExtraRoll) && nonNull(fallenPinsSecondExtraRoll));
     }
 
     @Override
