@@ -228,7 +228,7 @@ class BowlingGame {
     public void logFallenPins(int fallenPins) {
       if (isNull(super.fallenPinsFirstRoll)) {
         super.fallenPinsFirstRoll = fallenPins;
-      } else if (isNull(super.fallenPinsSecondRoll)) {
+      } else if (!super.isStrike() && isNull(super.fallenPinsSecondRoll)) {
         super.fallenPinsSecondRoll = fallenPins;
       } else if ((super.isSpare() || super.isStrike()) && isNull(fallenPinsFirstExtraRoll)) {
         fallenPinsFirstExtraRoll = fallenPins;
@@ -241,7 +241,7 @@ class BowlingGame {
 
     @Override
     public boolean isInProgress() {
-      return super.isInProgress()
+      return (!super.isSpare() && !super.isStrike() && nonNull(super.fallenPinsFirstRoll) && isNull(super.fallenPinsSecondRoll))
           || (super.isSpare() && isNull(fallenPinsFirstExtraRoll))
           || (super.isStrike() && (isNull(fallenPinsFirstExtraRoll) || isNull(fallenPinsSecondExtraRoll)));
     }

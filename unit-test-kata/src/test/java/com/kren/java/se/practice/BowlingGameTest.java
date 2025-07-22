@@ -291,9 +291,19 @@ class BowlingGameTest {
     when(generator.getNumber()).thenReturn(10);
 
     while (game.isInProgress()) {
-      game.playFrame()
-          .rollBall(Player.ONE)
-          .rollBall(Player.TWO);
+      if (game.playFrame().getCurrentFrameNumber() == FrameNumber.TEN) {
+        game.playFrame()
+            .rollBall(Player.ONE)
+            .rollBall(Player.ONE)
+            .rollBall(Player.ONE)
+            .rollBall(Player.TWO)
+            .rollBall(Player.TWO)
+            .rollBall(Player.TWO);
+      } else {
+        game.playFrame()
+            .rollBall(Player.ONE)
+            .rollBall(Player.TWO);
+      }
     }
 
     assertEquals(30, game.getScore(FrameNumber.ONE, Player.ONE));
@@ -307,6 +317,8 @@ class BowlingGameTest {
     assertEquals(270, game.getScore(FrameNumber.NINE, Player.ONE));
     assertEquals(300, game.getScore(FrameNumber.TEN, Player.ONE));
   }
+
+  // TBD sequence of spares
 
   // calculate Score for sequence of strikes
   // calculate score for strike
