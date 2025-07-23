@@ -96,7 +96,7 @@ class BowlingGame {
           .map(Frame::new)
           .toArray(Frame[]::new);
 
-      // TBD
+      frames[frames.length - 2] = new FrameNine();
       frames[frames.length - 1] = new FrameTen();
 
       for (int i = 0; i < frames.length; i++) {
