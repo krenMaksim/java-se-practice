@@ -11,6 +11,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.stream.Stream;
+
 import static com.kren.java.se.practice.BowlingGame.Player;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -306,16 +308,18 @@ class BowlingGameTest {
       }
     }
 
-    assertEquals(30, game.getScore(FrameNumber.ONE, Player.ONE));
-    assertEquals(60, game.getScore(FrameNumber.TWO, Player.ONE));
-    assertEquals(90, game.getScore(FrameNumber.THREE, Player.ONE));
-    assertEquals(120, game.getScore(FrameNumber.FOUR, Player.ONE));
-    assertEquals(150, game.getScore(FrameNumber.FIVE, Player.ONE));
-    assertEquals(180, game.getScore(FrameNumber.SIX, Player.ONE));
-    assertEquals(210, game.getScore(FrameNumber.SEVEN, Player.ONE));
-    assertEquals(240, game.getScore(FrameNumber.EIGHT, Player.ONE));
-    assertEquals(270, game.getScore(FrameNumber.NINE, Player.ONE));
-    assertEquals(300, game.getScore(FrameNumber.TEN, Player.ONE));
+    Stream.of(Player.values()).forEach(player -> {
+      assertEquals(30, game.getScore(FrameNumber.ONE, player));
+      assertEquals(60, game.getScore(FrameNumber.TWO, player));
+      assertEquals(90, game.getScore(FrameNumber.THREE, player));
+      assertEquals(120, game.getScore(FrameNumber.FOUR, player));
+      assertEquals(150, game.getScore(FrameNumber.FIVE, player));
+      assertEquals(180, game.getScore(FrameNumber.SIX, player));
+      assertEquals(210, game.getScore(FrameNumber.SEVEN, player));
+      assertEquals(240, game.getScore(FrameNumber.EIGHT, player));
+      assertEquals(270, game.getScore(FrameNumber.NINE, player));
+      assertEquals(300, game.getScore(FrameNumber.TEN, player));
+    });
   }
 
   // TBD sequence of spares
