@@ -206,11 +206,49 @@ class BowlingGame {
         return isOneExtraBallRolled() && nonNull(next.fallenPinsSecondRoll);
       }
 
-      private boolean areTwoExtraBallsRolledWhenFirstRollIsStrike() {
+      protected boolean areTwoExtraBallsRolledWhenFirstRollIsStrike() {
         return isOneExtraBallRolled()
             && next.isStrike()
             && nonNull(next.next)
             && nonNull(next.next.fallenPinsFirstRoll);
+      }
+    }
+  }
+
+  public static class FrameNine extends Frame {
+
+    FrameNine() {
+      super(FrameNumber.NINE);
+    }
+
+    @Override
+    public int calculateScore() {
+      return new FrameNine.ScoreNine().calculate();
+    }
+
+    private class ScoreNine extends Frame.Score {
+
+      @Override
+      protected int calculateFallenPinsTotal() {
+        if (isFrameCompleted()) {
+          if (FrameNine.super.isSpare() && isOneExtraBallRolled()) {
+            return FrameNine.super.fallenPinsFirstRoll + FrameNine.super.fallenPinsSecondRoll + FrameNine.super.next.fallenPinsFirstRoll;
+          } else if (FrameNine.super.isStrike() && areTwoExtraBallsRolled()) {
+            return FrameNine.super.fallenPinsFirstRoll + FrameNine.super.next.fallenPinsFirstRoll + FrameNine.super.next.fallenPinsSecondRoll;
+          } else if (FrameNine.super.isStrike() && areTwoExtraBallsRolledWhenFirstRollIsStrike()) {
+            return FrameNine.super.fallenPinsFirstRoll + FrameNine.super.next.fallenPinsFirstRoll + ((FrameTen) FrameNine.super.next).fallenPinsFirstExtraRoll;
+          } else if (!FrameNine.super.isSpare() && !FrameNine.super.isStrike()) {
+            return FrameNine.super.fallenPinsFirstRoll + FrameNine.super.fallenPinsSecondRoll;
+          }
+        }
+        return Frame.Score.NO_SCORE_CALCULATED;
+      }
+
+      @Override
+      protected boolean areTwoExtraBallsRolledWhenFirstRollIsStrike() {
+        return isOneExtraBallRolled()
+            && FrameNine.super.next.isStrike()
+            && nonNull(((FrameTen) FrameNine.super.next).fallenPinsFirstExtraRoll);
       }
     }
   }
