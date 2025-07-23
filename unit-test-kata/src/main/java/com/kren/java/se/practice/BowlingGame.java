@@ -253,6 +253,7 @@ class BowlingGame {
     }
   }
 
+  // TBD we may try another option by allocating a frame called ExtraRolls and attach it to Tenth
   public static class FrameTen extends Frame {
 
     private Integer fallenPinsFirstExtraRoll;
