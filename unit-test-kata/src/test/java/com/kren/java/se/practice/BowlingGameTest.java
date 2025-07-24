@@ -11,8 +11,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.stream.Stream;
-
 import static com.kren.java.se.practice.BowlingGame.Player;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -308,7 +306,7 @@ class BowlingGameTest {
       }
     }
 
-    Stream.of(Player.values()).forEach(player -> {
+    for (var player : Player.values()) {
       assertEquals(30, game.getScore(FrameNumber.ONE, player));
       assertEquals(60, game.getScore(FrameNumber.TWO, player));
       assertEquals(90, game.getScore(FrameNumber.THREE, player));
@@ -319,7 +317,7 @@ class BowlingGameTest {
       assertEquals(240, game.getScore(FrameNumber.EIGHT, player));
       assertEquals(270, game.getScore(FrameNumber.NINE, player));
       assertEquals(300, game.getScore(FrameNumber.TEN, player));
-    });
+    }
   }
 
   @Test
@@ -345,7 +343,7 @@ class BowlingGameTest {
       }
     }
 
-    Stream.of(Player.values()).forEach(player -> {
+    for (var player : Player.values()) {
       assertEquals(15, game.getScore(FrameNumber.ONE, player));
       assertEquals(30, game.getScore(FrameNumber.TWO, player));
       assertEquals(45, game.getScore(FrameNumber.THREE, player));
@@ -356,12 +354,29 @@ class BowlingGameTest {
       assertEquals(120, game.getScore(FrameNumber.EIGHT, player));
       assertEquals(135, game.getScore(FrameNumber.NINE, player));
       assertEquals(150, game.getScore(FrameNumber.TEN, player));
-    });
+    }
   }
 
-  // TBD sequence of spares
+  @Test
+  @Timeout(3)
+  void calculateScoreForAllDreadedGutterBalls() {
+    when(generator.getNumber()).thenReturn(0);
 
-  // calculate Score for sequence of strikes
+    while (game.isInProgress()) {
+      game.playFrame()
+          .rollBall(Player.ONE)
+          .rollBall(Player.ONE)
+          .rollBall(Player.TWO)
+          .rollBall(Player.TWO);
+    }
+
+    for (var player : Player.values()) {
+      for (var frameNumber : FrameNumber.values()) {
+        assertEquals(0, game.getScore(frameNumber, player));
+      }
+    }
+  }
+
   // calculate score for strike
   // calculate score for full game
 }
