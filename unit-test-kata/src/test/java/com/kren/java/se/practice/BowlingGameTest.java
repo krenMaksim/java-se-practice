@@ -288,7 +288,7 @@ class BowlingGameTest {
   }
 
   @Test
-  @Timeout(30)
+  @Timeout(3)
   void calculateScoreForAllStrikes() {
     when(generator.getNumber()).thenReturn(10);
 
@@ -319,6 +319,43 @@ class BowlingGameTest {
       assertEquals(240, game.getScore(FrameNumber.EIGHT, player));
       assertEquals(270, game.getScore(FrameNumber.NINE, player));
       assertEquals(300, game.getScore(FrameNumber.TEN, player));
+    });
+  }
+
+  @Test
+  @Timeout(3)
+  void calculateScoreForAllSpares() {
+    when(generator.getNumber()).thenReturn(5);
+
+    while (game.isInProgress()) {
+      if (game.playFrame().getCurrentFrameNumber() == FrameNumber.TEN) {
+        game.playFrame()
+            .rollBall(Player.ONE)
+            .rollBall(Player.ONE)
+            .rollBall(Player.ONE)
+            .rollBall(Player.TWO)
+            .rollBall(Player.TWO)
+            .rollBall(Player.TWO);
+      } else {
+        game.playFrame()
+            .rollBall(Player.ONE)
+            .rollBall(Player.ONE)
+            .rollBall(Player.TWO)
+            .rollBall(Player.TWO);
+      }
+    }
+
+    Stream.of(Player.values()).forEach(player -> {
+      assertEquals(15, game.getScore(FrameNumber.ONE, player));
+      assertEquals(30, game.getScore(FrameNumber.TWO, player));
+      assertEquals(45, game.getScore(FrameNumber.THREE, player));
+      assertEquals(60, game.getScore(FrameNumber.FOUR, player));
+      assertEquals(75, game.getScore(FrameNumber.FIVE, player));
+      assertEquals(90, game.getScore(FrameNumber.SIX, player));
+      assertEquals(105, game.getScore(FrameNumber.SEVEN, player));
+      assertEquals(120, game.getScore(FrameNumber.EIGHT, player));
+      assertEquals(135, game.getScore(FrameNumber.NINE, player));
+      assertEquals(150, game.getScore(FrameNumber.TEN, player));
     });
   }
 
