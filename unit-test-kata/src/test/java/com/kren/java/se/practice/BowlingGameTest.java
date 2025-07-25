@@ -373,7 +373,7 @@ class BowlingGameTest {
     }
 
     for (var player : Player.values()) {
-      for (var frameNumber : FrameNumber.values()) {
+      for (var frameNumber : FrameNumber.allFrames()) {
         assertEquals(0, game.getScore(frameNumber, player));
       }
     }

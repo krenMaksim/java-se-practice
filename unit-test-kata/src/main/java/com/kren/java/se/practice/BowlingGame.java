@@ -92,7 +92,7 @@ class BowlingGame {
   private static class Frame {
 
     public static Frame newInstance() {
-      Frame[] frames = Stream.of(FrameNumber.values())
+      Frame[] frames = Stream.of(FrameNumber.allFrames())
           .map(Frame::new)
           .toArray(Frame[]::new);
 
@@ -330,7 +330,13 @@ class BowlingGame {
   }
 
   public enum FrameNumber {
-    ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN
+    ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN, TEN_EXTRA_ROLLS;
+
+    public static FrameNumber[] allFrames() {
+      return Stream.of(FrameNumber.values())
+          .filter(not(isEqual(TEN_EXTRA_ROLLS)))
+          .toArray(FrameNumber[]::new);
+    }
   }
 
   public interface FallenPinsGenerator {
