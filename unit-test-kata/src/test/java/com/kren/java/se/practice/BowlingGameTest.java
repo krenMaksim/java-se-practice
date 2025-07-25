@@ -111,11 +111,6 @@ class BowlingGameTest {
     assertNotEquals(frame, newFrame);
   }
 
-  //  @Test
-  //  void someTest() {
-  //    System.out.println(new BowlingGame.FrameTen().isInProgress());
-  //  }
-
   @Test
   void startGameWithFirstFrame() {
     game.playFrame();
@@ -375,6 +370,133 @@ class BowlingGameTest {
         assertEquals(0, game.getScore(frameNumber, player));
       }
     }
+  }
+
+  @Test
+  @Timeout(3)
+  void calculateScoreForFullGame() {
+    when(generator.getNumber()).thenReturn(
+        // FrameNumber.ONE
+        0, 5, // Player.ONE
+        4, 6, // Player.TWO
+
+        // FrameNumber.TWO
+        10,   // Player.ONE
+        8, 2, // Player.TWO
+
+        // FrameNumber.THREE
+        5, 5, // Player.ONE
+        9, 0, // Player.TWO
+
+        // FrameNumber.FOUR
+        9, 1, // Player.ONE
+        0, 0, // Player.TWO
+
+        // FrameNumber.FIVE
+        2, 7, // Player.ONE
+        10,   // Player.TWO
+
+        // FrameNumber.SIX
+        0, 4, // Player.ONE
+        5, 5, // Player.TWO
+
+        // FrameNumber.SEVEN
+        10, // Player.ONE
+        10, // Player.TWO
+
+        // FrameNumber.EIGHT
+        2, 2, // Player.ONE
+        4, 4, // Player.TWO
+
+        // FrameNumber.NINE
+        10,   // Player.ONE
+        5, 3, // Player.TWO
+
+        // FrameNumber.TEN
+        10,  // Player.ONE
+        10,  //   extra roll one
+        10,  //   extra roll two
+        0, 0 // Player.TWO
+    );
+
+    game.playFrame() // FrameNumber.ONE
+        .rollBall(Player.ONE)
+        .rollBall(Player.ONE)
+        .rollBall(Player.TWO)
+        .rollBall(Player.TWO)
+        .playFrame() // FrameNumber.TWO
+        .rollBall(Player.ONE)
+        .rollBall(Player.TWO)
+        .rollBall(Player.TWO)
+        .playFrame() // FrameNumber.THREE
+        .rollBall(Player.ONE)
+        .rollBall(Player.ONE)
+        .rollBall(Player.TWO)
+        .rollBall(Player.TWO)
+        .playFrame() // FrameNumber.FOUR
+        .rollBall(Player.ONE)
+        .rollBall(Player.ONE)
+        .rollBall(Player.TWO)
+        .rollBall(Player.TWO)
+        .playFrame() // FrameNumber.FIVE
+        .rollBall(Player.ONE)
+        .rollBall(Player.ONE)
+        .rollBall(Player.TWO)
+        .playFrame() // FrameNumber.SIX
+        .rollBall(Player.ONE)
+        .rollBall(Player.ONE)
+        .rollBall(Player.TWO)
+        .rollBall(Player.TWO)
+        .playFrame() // FrameNumber.SEVEN
+        .rollBall(Player.ONE)
+        .rollBall(Player.TWO)
+        .playFrame() // FrameNumber.EIGHT
+        .rollBall(Player.ONE)
+        .rollBall(Player.ONE)
+        .rollBall(Player.TWO)
+        .rollBall(Player.TWO)
+        .playFrame() // FrameNumber.NINE
+        .rollBall(Player.ONE)
+        .rollBall(Player.TWO)
+        .rollBall(Player.TWO)
+        .playFrame() // FrameNumber.TEN
+        .rollBall(Player.ONE)
+        .rollBall(Player.ONE)
+        .rollBall(Player.ONE)
+        .rollBall(Player.TWO)
+        .rollBall(Player.TWO);
+
+    assertFalse(game.isInProgress());
+
+    assertEquals(15, game.getScore(FrameNumber.ONE, Player.ONE));
+    assertEquals(15, game.getScore(FrameNumber.ONE, Player.TWO));
+
+    assertEquals(30, game.getScore(FrameNumber.TWO, Player.ONE));
+    assertEquals(30, game.getScore(FrameNumber.TWO, Player.TWO));
+
+    assertEquals(45, game.getScore(FrameNumber.THREE, Player.ONE));
+    assertEquals(45, game.getScore(FrameNumber.THREE, Player.TWO));
+
+    assertEquals(60, game.getScore(FrameNumber.FOUR, Player.ONE));
+    assertEquals(60, game.getScore(FrameNumber.FOUR, Player.TWO));
+
+    assertEquals(75, game.getScore(FrameNumber.FIVE, Player.ONE));
+    assertEquals(75, game.getScore(FrameNumber.FIVE, Player.TWO));
+
+    assertEquals(90, game.getScore(FrameNumber.SIX, Player.ONE));
+    assertEquals(90, game.getScore(FrameNumber.SIX, Player.TWO));
+
+    assertEquals(105, game.getScore(FrameNumber.SEVEN, Player.ONE));
+    assertEquals(105, game.getScore(FrameNumber.SEVEN, Player.TWO));
+
+    assertEquals(120, game.getScore(FrameNumber.EIGHT, Player.ONE));
+    assertEquals(120, game.getScore(FrameNumber.EIGHT, Player.TWO));
+
+    assertEquals(135, game.getScore(FrameNumber.NINE, Player.ONE));
+    assertEquals(135, game.getScore(FrameNumber.NINE, Player.TWO));
+
+    assertEquals(150, game.getScore(FrameNumber.TEN, Player.ONE));
+    assertEquals(150, game.getScore(FrameNumber.TEN, Player.TWO));
   }
 
   // calculate score for strike
