@@ -208,7 +208,8 @@ class BowlingGameTest {
         .rollBall(Player.TWO)
         .playFrame();
 
-    assertEquals(currentFrame.next(), game.getCurrentFrameNumber());
+    assertEquals(FrameNumber.ONE, currentFrame);
+    assertEquals(FrameNumber.TWO, game.getCurrentFrameNumber());
   }
 
   @Test
