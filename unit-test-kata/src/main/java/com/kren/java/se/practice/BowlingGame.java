@@ -96,7 +96,6 @@ class BowlingGame {
           .map(Frame::new)
           .toArray(Frame[]::new);
 
-      frames[frames.length - 2] = new FrameNine();
       frames[frames.length - 1] = new FrameTen();
 
       for (int i = 0; i < frames.length; i++) {
@@ -215,52 +214,11 @@ class BowlingGame {
     }
   }
 
-  public static class FrameNine extends Frame {
-
-    FrameNine() {
-      super(FrameNumber.NINE);
-    }
-
-    @Override
-    public int calculateScore() {
-      return new FrameNine.ScoreNine().calculate();
-    }
-
-    private class ScoreNine extends Frame.Score {
-
-      @Override
-      protected int calculateFallenPinsTotal() {
-        if (isFrameCompleted()) {
-          if (FrameNine.super.isSpare() && isOneExtraBallRolled()) {
-            return FrameNine.super.fallenPinsFirstRoll + FrameNine.super.fallenPinsSecondRoll + FrameNine.super.next.fallenPinsFirstRoll;
-          } else if (FrameNine.super.isStrike() && areTwoExtraBallsRolled()) {
-            return FrameNine.super.fallenPinsFirstRoll + FrameNine.super.next.fallenPinsFirstRoll + FrameNine.super.next.fallenPinsSecondRoll;
-          } else if (FrameNine.super.isStrike() && areTwoExtraBallsRolledWhenFirstRollIsStrike()) {
-            return FrameNine.super.fallenPinsFirstRoll + FrameNine.super.next.fallenPinsFirstRoll + ((FrameTen) FrameNine.super.next).fallenPinsFirstExtraRoll;
-          } else if (!FrameNine.super.isSpare() && !FrameNine.super.isStrike()) {
-            return FrameNine.super.fallenPinsFirstRoll + FrameNine.super.fallenPinsSecondRoll;
-          }
-        }
-        return Frame.Score.NO_SCORE_CALCULATED;
-      }
-
-      @Override
-      protected boolean areTwoExtraBallsRolledWhenFirstRollIsStrike() {
-        return isOneExtraBallRolled()
-            && FrameNine.super.next.isStrike()
-            && nonNull(((FrameTen) FrameNine.super.next).fallenPinsFirstExtraRoll);
-      }
-    }
-  }
-
-  // TBD we may try another option by allocating a frame called ExtraRolls and attach it to Tenth
   public static class FrameTen extends Frame {
-
-    private Integer fallenPinsFirstExtraRoll;
-    private Integer fallenPinsSecondExtraRoll;
 
     FrameTen() {
       super(FrameNumber.TEN);
+      super.next = new Frame(FrameNumber.TEN_EXTRA_ROLLS);
     }
 
     @Override
@@ -269,10 +227,10 @@ class BowlingGame {
         super.fallenPinsFirstRoll = fallenPins;
       } else if (!super.isStrike() && isNull(super.fallenPinsSecondRoll)) {
         super.fallenPinsSecondRoll = fallenPins;
-      } else if ((super.isSpare() || super.isStrike()) && isNull(fallenPinsFirstExtraRoll)) {
-        fallenPinsFirstExtraRoll = fallenPins;
-      } else if (super.isStrike() && isNull(fallenPinsSecondExtraRoll)) {
-        fallenPinsSecondExtraRoll = fallenPins;
+      } else if ((super.isSpare() || super.isStrike()) && isNull(super.next.fallenPinsFirstRoll)) {
+        super.next.fallenPinsFirstRoll = fallenPins;
+      } else if (super.isStrike() && isNull(super.next.fallenPinsSecondRoll)) {
+        super.next.fallenPinsSecondRoll = fallenPins;
       } else {
         throw new IllegalArgumentException("Number rolls exceeded");
       }
@@ -281,47 +239,15 @@ class BowlingGame {
     @Override
     public boolean isInProgress() {
       return (!super.isSpare() && !super.isStrike() && nonNull(super.fallenPinsFirstRoll) && isNull(super.fallenPinsSecondRoll))
-          || (super.isSpare() && isNull(fallenPinsFirstExtraRoll))
-          || (super.isStrike() && (isNull(fallenPinsFirstExtraRoll) || isNull(fallenPinsSecondExtraRoll)));
+          || (super.isSpare() && isNull(super.next.fallenPinsFirstRoll))
+          || (super.isStrike() && (isNull(super.next.fallenPinsFirstRoll) || isNull(super.next.fallenPinsSecondRoll)));
     }
 
     @Override
     public boolean isFrameCompleted() {
       return (nonNull(super.fallenPinsFirstRoll) && nonNull(super.fallenPinsSecondRoll) && !super.isSpare())
-          || (super.isSpare() && nonNull(fallenPinsFirstExtraRoll))
-          || (super.isStrike() && nonNull(fallenPinsFirstExtraRoll) && nonNull(fallenPinsSecondExtraRoll));
-    }
-
-    @Override
-    public int calculateScore() {
-      return new ScoreTen().calculate();
-    }
-
-    private class ScoreTen extends Frame.Score {
-
-      @Override
-      protected int calculateFallenPinsTotal() {
-        if (FrameTen.super.isFrameCompleted()) {
-          if (FrameTen.super.isSpare() && isOneExtraBallRolled()) {
-            return FrameTen.super.fallenPinsFirstRoll + FrameTen.super.fallenPinsSecondRoll + fallenPinsFirstExtraRoll;
-          } else if (FrameTen.super.isStrike() && areTwoExtraBallsRolled()) {
-            return FrameTen.super.fallenPinsFirstRoll + fallenPinsFirstExtraRoll + fallenPinsSecondExtraRoll;
-          } else if (!FrameTen.super.isSpare() && !FrameTen.super.isStrike()) {
-            return FrameTen.super.fallenPinsFirstRoll + FrameTen.super.fallenPinsSecondRoll;
-          }
-        }
-        return Frame.Score.NO_SCORE_CALCULATED;
-      }
-
-      @Override
-      protected boolean isOneExtraBallRolled() {
-        return nonNull(fallenPinsFirstExtraRoll);
-      }
-
-      @Override
-      protected boolean areTwoExtraBallsRolled() {
-        return isOneExtraBallRolled() && nonNull(fallenPinsSecondExtraRoll);
-      }
+          || (super.isSpare() && nonNull(super.next.fallenPinsFirstRoll))
+          || (super.isStrike() && nonNull(super.next.fallenPinsFirstRoll) && nonNull(super.next.fallenPinsSecondRoll));
     }
   }
 
