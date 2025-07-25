@@ -214,7 +214,7 @@ class BowlingGame {
     }
   }
 
-  public static class FrameTen extends Frame {
+  private static class FrameTen extends Frame {
 
     FrameTen() {
       super(FrameNumber.TEN);
