@@ -78,7 +78,9 @@ class BowlingGameTest {
   }
 
   @Test
-  void playFullGame() { // TBD it does not consider FallenPins generator
+  void playFullGame() {
+    when(generator.getNumber()).thenReturn(1);
+
     assertDoesNotThrow(() -> {
       while (game.isInProgress()) {
         game.playFrame()
@@ -266,16 +268,20 @@ class BowlingGameTest {
   @Test
   void calculateScoreForTwoFrames() {
     when(generator.getNumber()).thenReturn(
-        5, 4, // FrameNumber.ONE Player.ONE
-        1, 0,        // FrameNumber.ONE Player.TWO
-        5, 2,        // FrameNumber.TWO Player.ONE
-        4, 4         // FrameNumber.TWO Player.TWO
+        // FrameNumber.ONE
+        5, 4, // Player.ONE
+        1, 0, // Player.TWO
+
+        // FrameNumber.TWO
+        5, 2, // Player.ONE
+        4, 4  // Player.TWO
     );
 
     playGame(2);
 
     assertEquals(9, game.getScore(FrameNumber.ONE, Player.ONE));
     assertEquals(1, game.getScore(FrameNumber.ONE, Player.TWO));
+
     assertEquals(16, game.getScore(FrameNumber.TWO, Player.ONE));
     assertEquals(9, game.getScore(FrameNumber.TWO, Player.TWO));
   }
@@ -498,7 +504,4 @@ class BowlingGameTest {
     assertEquals(147, game.getScore(FrameNumber.TEN, Player.ONE));
     assertEquals(128, game.getScore(FrameNumber.TEN, Player.TWO));
   }
-
-  // calculate score for strike
-  // calculate score for full game
 }
