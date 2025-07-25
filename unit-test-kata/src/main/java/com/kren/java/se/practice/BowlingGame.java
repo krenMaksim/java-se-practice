@@ -330,31 +330,7 @@ class BowlingGame {
   }
 
   public enum FrameNumber {
-    ONE(1),
-    TWO(2),
-    THREE(3),
-    FOUR(4),
-    FIVE(5),
-    SIX(6),
-    SEVEN(7),
-    EIGHT(8),
-    NINE(9),
-    TEN(-1) {
-      @Override
-      public FrameNumber next() {
-        throw new IllegalArgumentException("Game is over already");
-      }
-    };
-
-    private final int nextFrameIndex;
-
-    FrameNumber(int nextFrameIndex) {
-      this.nextFrameIndex = nextFrameIndex;
-    }
-
-    public FrameNumber next() {
-      return FrameNumber.values()[nextFrameIndex];
-    }
+    ONE, TWO, THREE, FOUR, FIVE, SIX, SEVEN, EIGHT, NINE, TEN
   }
 
   public interface FallenPinsGenerator {
