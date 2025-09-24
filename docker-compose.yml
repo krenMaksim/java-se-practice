@@ -1,0 +1,55 @@
+# Deletes all data & redeploys
+# docker compose down -v && docker compose up --build
+
+# Keeps volumes and redeploys
+# docker compose down && docker compose up --build
+
+# Open pgAdmin in your browser at http://localhost:5050
+# Login using:
+#        Email: pgadmin4@pgadmin.org
+#        Password: admin
+
+# Add a new server in pgAdmin
+#  Host: postgres_container (service name from docker-compose)
+#  Port: 5432
+#  Username: postgres (or value from POSTGRES_USER)
+#  Password: changeme (or value from POSTGRES_PASSWORD)
+
+services:
+  postgres:
+    container_name: postgres_container
+    image: postgres:16.2
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /var/lib/postgresql/data
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d  # ← mount folder with SQL scripts
+    ports:
+      - "5432:5432"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4:8.2
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "${PGADMIN_PORT:-5050}:80"
+    networks:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  pgadmin_data:
