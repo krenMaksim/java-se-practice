@@ -1,6 +1,8 @@
 package com.kren.java.se.practice.records;
 
-record User(int id, String name, String address) {
+import java.util.List;
+
+record User(int id, String name, String address, List<String> products) {
 
   User {
     if (id <= 0) {
@@ -9,6 +11,6 @@ record User(int id, String name, String address) {
   }
 
   User(int id, String name) {
-    this(id, name, null);
+    this(id, name, null, List.of());
   }
 }
