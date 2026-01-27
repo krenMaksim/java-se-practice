@@ -7,4 +7,8 @@ record User(int id, String name, String address) {
       throw new IllegalArgumentException("User id must be positive integer");
     }
   }
+
+  User(int id, String name) {
+    this(id, name, null);
+  }
 }

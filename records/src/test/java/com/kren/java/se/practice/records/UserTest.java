@@ -11,21 +11,30 @@ class UserTest {
   void newUser() {
     var user = new User(1, "Bob", "New York");
 
-    assertDoesNotThrow(() -> System.out.println(user.toString()));
+    assertDoesNotThrow(() -> System.out.println(user));
   }
 
   @Test
-  void validateId() {
+  void implementFieldValidation() {
     assertThrows(
         IllegalArgumentException.class,
         () -> new User(-5, "Bob", "New York"));
   }
 
-  // implement telescopic constructor
+  @Test
+  void implementTelescopicConstructor() {
+    var user = new User(1, "Bob");
+
+    assertDoesNotThrow(() -> System.out.println(user));
+  }
+
+  // implement telescopic constructor with lombok
 
   // implement static factory method
 
   // implement builder
 
   // use lombok for builder
+
+  // add list field and implement defencive programming
 }
