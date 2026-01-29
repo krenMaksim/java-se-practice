@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserTest {
@@ -43,19 +44,26 @@ class UserTest {
         () -> products.add("product 3"));
   }
 
-  // add list field and implement defencive programming
+  @Test
+  void implementStaticFactoryMethod() {
+    assertDoesNotThrow(() -> User3.newInstance(1, "Bob"));
+  }
 
-  // implement telescopic constructor with lombok
+  @Test
+  void tryOverrideGetter() {
+    var user = new User4(1, "Bob");
 
-  // implement static factory method
+    assertEquals("-Bob-", user.name());
+  }
+
+  @Test
+  void addNewMethod() {
+    var user = new User5(1, "Bob", "Dilan");
+
+    assertEquals("Bob Dilan", user.fullName());
+  }
 
   // implement builder
 
   // use lombok for builder
-
-  // try to override getter
-
-  // try to add new method
-
-  // try to make constructor private and leave only static factory method
 }

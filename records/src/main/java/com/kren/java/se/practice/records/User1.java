@@ -22,3 +22,28 @@ record User2(int id, List<String> products) {
   }
 }
 
+record User3(int id, String name) {
+
+  // but still it is not possible to hide constructor to force factory method usage
+
+  public static User3 newInstance(int id, String name) {
+    return new User3(id, name);
+  }
+}
+
+record User4(int id, String name) {
+
+  public String name() {
+    return String.format("-%s-", name);
+  }
+}
+
+record User5(int id, String firstName, String lastName) {
+
+  public String fullName() {
+    return String.format("%s %s", firstName, lastName);
+  }
+}
+
+
+
