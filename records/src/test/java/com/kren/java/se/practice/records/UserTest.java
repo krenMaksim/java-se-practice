@@ -63,6 +63,24 @@ class UserTest {
     assertEquals("Bob Dilan", user.fullName());
   }
 
+  @Test
+  void implementBuilder() {
+    var user = new User6.Builder()
+        .withId(1)
+        .withName("Bob")
+        .build();
+
+    assertEquals(new User6(1, "Bob"), user);
+  }
+
+  @Test
+  void useBuilderToCreateNullUser() {
+    var user = new User6.Builder()
+        .build();
+
+    assertEquals(new User6(0, null), user);
+  }
+
   // implement builder
 
   // use lombok for builder

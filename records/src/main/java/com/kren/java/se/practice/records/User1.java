@@ -45,5 +45,28 @@ record User5(int id, String firstName, String lastName) {
   }
 }
 
+record User6(int id, String name) {
+
+  static class Builder {
+
+    private int id;
+    private String name;
+
+    public Builder withId(int id) {
+      this.id = id;
+      return this;
+    }
+
+    public Builder withName(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public User6 build() {
+      return new User6(id, name);
+    }
+  }
+}
+
 
 
