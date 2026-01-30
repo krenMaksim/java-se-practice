@@ -90,6 +90,4 @@ class UserTest {
 
     assertEquals(new User7(1, "Bob"), user);
   }
-
-  // try inheritance
 }
