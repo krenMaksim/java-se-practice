@@ -81,7 +81,15 @@ class UserTest {
     assertEquals(new User6(0, null), user);
   }
 
-  // implement builder
+  @Test
+  void useLombokBuilder() {
+    var user = User7.builder()
+        .id(1)
+        .name("Bob")
+        .build();
 
-  // use lombok for builder
+    assertEquals(new User7(1, "Bob"), user);
+  }
+
+  // try inheritance
 }

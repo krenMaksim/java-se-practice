@@ -1,5 +1,7 @@
 package com.kren.java.se.practice.records;
 
+import lombok.Builder;
+
 import java.util.List;
 
 record User1(int id, String name, String address) {
@@ -66,6 +68,11 @@ record User6(int id, String name) {
       return new User6(id, name);
     }
   }
+}
+
+@Builder
+record User7(int id, String name) {
+
 }
 
 
