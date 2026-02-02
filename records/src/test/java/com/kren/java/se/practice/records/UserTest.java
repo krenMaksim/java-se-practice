@@ -100,8 +100,13 @@ class UserTest {
   }
 
   // Check exercises in ChatGPT
-  // task 9 - properties
+
   // task 10
+  //  . Pattern Matching instanceof
+  //
+  //  Create an interface Shape, and two record implementations Circle(double radius), Rectangle(double width, double
+  //  height).
+  //  Write a method double area(Shape shape) using pattern matching instanceof.
   // task 11
   // task 15
 }
