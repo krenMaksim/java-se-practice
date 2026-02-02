@@ -73,3 +73,5 @@ record User6(int id, String name) {
 @Builder
 record User7(int id, String name) {}
 
+record User8(int id, boolean isActive) {}
+

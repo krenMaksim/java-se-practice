@@ -8,6 +8,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class UserTest {
 
@@ -90,4 +91,18 @@ class UserTest {
 
     assertEquals(new User7(1, "Bob"), user);
   }
+
+  @Test
+  void useBoolean() {
+    var user = new User8(1, true);
+
+    assertTrue(user.isActive());
+  }
+
+  // Check exercises in ChatGPT
+  // try boolean field
+  // task 9 - properties
+  // task 10
+  // task 11
+  // task 15
 }
