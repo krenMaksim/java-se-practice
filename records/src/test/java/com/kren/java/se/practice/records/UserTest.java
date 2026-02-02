@@ -100,7 +100,6 @@ class UserTest {
   }
 
   // Check exercises in ChatGPT
-  // try boolean field
   // task 9 - properties
   // task 10
   // task 11
