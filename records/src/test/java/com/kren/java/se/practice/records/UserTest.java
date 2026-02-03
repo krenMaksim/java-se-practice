@@ -101,12 +101,5 @@ class UserTest {
 
   // Check exercises in ChatGPT
 
-  // task 11
-  //  Sealed Hierarchies
-  //
-  //  Make sealed interface Payment permits CashPayment, CardPayment, CryptoPayment.
-  //      Implement each as a record.
-  //  Add a switch (payment) returning a string description, taking advantage of exhaustiveness.
-
   // task 15
 }
