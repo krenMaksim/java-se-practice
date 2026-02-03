@@ -1,4 +1,4 @@
-package com.kren.java.se.practice.records.shape;
+package com.kren.java.se.practice.records;
 
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package com.kren.java.se.practice.records.shape;
+package com.kren.java.se.practice.records;
 
 interface Shape {
 
@@ -12,4 +12,10 @@ interface Shape {
       throw new IllegalArgumentException("Unknown shape");
     }
   }
+}
+
+record Rectangle(double width, double height) implements Shape {
+}
+
+record Circle(double radius) implements Shape {
 }
