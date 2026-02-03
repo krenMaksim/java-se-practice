@@ -3,6 +3,7 @@ package com.kren.java.se.practice.records;
 import lombok.Builder;
 
 import java.util.List;
+import java.util.Optional;
 
 record User1(int id, String name, String address) {
 
@@ -74,4 +75,11 @@ record User6(int id, String name) {
 record User7(int id, String name) {}
 
 record User8(int id, boolean isActive) {}
+
+record User9(int id, String name, Optional<String> avatarUrl) {
+
+  User9(int id, String name) {
+    this(id, name, Optional.empty());
+  }
+}
 

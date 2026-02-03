@@ -99,7 +99,14 @@ class UserTest {
     assertTrue(user.isActive());
   }
 
-  // Check exercises in ChatGPT
+  @Test
+  void useOptional() {
+    var user = new User9(1, "Bob");
 
-  // task 15
+    var avatarUrl = user.avatarUrl();
+
+    assertTrue(avatarUrl.isEmpty());
+  }
+
+  // Check exercises in ChatGPT
 }
