@@ -107,6 +107,4 @@ class UserTest {
 
     assertTrue(avatarUrl.isEmpty());
   }
-
-  // Check exercises in ChatGPT
 }
