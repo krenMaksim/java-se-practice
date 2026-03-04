@@ -12,6 +12,7 @@
         <module>io</module>
         <module>file-upload</module>
         <module>records</module>
+        <module>collections</module>
     </modules>
 
     <properties>
