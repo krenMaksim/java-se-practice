@@ -1,4 +1,4 @@
-package com.kren.java.se.practice.collections;
+package com.kren.java.se.practice.collection;
 
 import org.junit.jupiter.api.Test;
 
