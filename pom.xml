@@ -13,6 +13,7 @@
         <module>file-upload</module>
         <module>records</module>
         <module>collections</module>
+        <module>pragmatic-programmer</module>
     </modules>
 
     <properties>
